@@ -8,13 +8,14 @@ namespace ElementsOfProgrammingInterviews.Chapter4
 {
     public class PrimitiveTypes
     {
+        private const int intSize = 32;
         /// <summary>
         /// Computes number of bits that are set to one in a number
         /// Uses inefficient approach, with worst case performance of O(N) - evaluates all bits in an integer
         /// </summary>
         public byte ComputeNumberOfBitsSetTo1_Inefficient(int number)
         {
-            const int one = 1, intSize = 32;
+            const int one = 1;
             byte result = 0, count = 0;
 
             while (number > 0 && count < intSize)
@@ -30,7 +31,6 @@ namespace ElementsOfProgrammingInterviews.Chapter4
 
         public byte ComputeNumberOfBitsSetTo1(int number)
         {
-            const int intSize = 32;
             byte result = 0, count = 0;
 
             while (number > 0 && count < intSize)
@@ -49,6 +49,34 @@ namespace ElementsOfProgrammingInterviews.Chapter4
             }
 
             return result;
+        }
+
+        public int RightPropagateRightmostBit(int number)
+        {
+            if (number == 0) return number;
+            byte count = 0;
+            int controlBit = 1, result = number;
+
+            while ((result & controlBit) == 0 && count < intSize)
+            {
+                result = result | controlBit;
+                controlBit = controlBit << 1;
+                count++;
+            }
+
+            return result;
+        }
+
+        public bool IsPowerOfTwo(int number)
+        {
+            return ComputeNumberOfBitsSetTo1(number) == 1;
+        }
+
+        public int ModuloPowerOfTwo(int number, byte powerOfTwo)
+        {
+            var computedPowerOfTwo = 1 << powerOfTwo;
+
+            throw new NotImplementedException();
         }
     }
 }
