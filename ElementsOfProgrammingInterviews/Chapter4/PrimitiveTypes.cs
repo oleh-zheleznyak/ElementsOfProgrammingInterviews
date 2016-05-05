@@ -35,13 +35,13 @@ namespace ElementsOfProgrammingInterviews.Chapter4
 
             while (number > 0 && count < intSize)
             {
-                // this won't work since the numbers are stored as 2s complement
-                // and we get a negative number instead of a positive one
                 var previousComplement = ~((number - 1));
 
-                if ((number & previousComplement) > 0)
+                var leastSignificantBit = number & previousComplement;
+
+                if (leastSignificantBit > 0)
                 {
-                    number = number ^ previousComplement;
+                    number = number ^ leastSignificantBit;
                     result++;
                 }
 
