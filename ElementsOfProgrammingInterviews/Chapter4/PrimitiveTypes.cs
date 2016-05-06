@@ -74,9 +74,26 @@ namespace ElementsOfProgrammingInterviews.Chapter4
 
         public int ModuloPowerOfTwo(int number, byte powerOfTwo)
         {
-            var computedPowerOfTwo = 1 << powerOfTwo;
+            if (powerOfTwo == 0) return 0;
 
-            throw new NotImplementedException();
+            int computedPowerOfTwo = 1 << powerOfTwo;
+
+            if (computedPowerOfTwo > number) return number;
+            if (computedPowerOfTwo == number) return 0;
+
+            byte count = 0;
+            int eraser = 1;
+
+            // eraser contains 1 in all positons up to, but not including the computedPowerOfTwo
+            while ((eraser & computedPowerOfTwo) == 0 && count < intSize)
+            {
+                eraser = (eraser << 1) + 1;
+            }
+            eraser = eraser >> 1;
+
+            int result = number & eraser;
+
+            return result;
         }
     }
 }
