@@ -51,7 +51,9 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Chapter4\PrimitiveTypesTests.cs" />
+    <Compile Include="Chapter5\ComputeParityOfAWordTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestDataProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ElementsOfProgrammingInterviews\ElementsOfProgrammingInterviews.csproj">
@@ -59,6 +61,7 @@
       <Name>ElementsOfProgrammingInterviews</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

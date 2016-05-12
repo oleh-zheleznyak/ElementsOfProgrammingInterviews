@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ElementsOfProgrammingInterviews.Tests;
 
 namespace ElementsOfProgrammingInterviews.Chapter4.Tests
 {
@@ -61,7 +62,7 @@ namespace ElementsOfProgrammingInterviews.Chapter4.Tests
         [TestMethod]
         public void IsPowerOfTwoTest_ReturnsTrue_GivenPowerOfTwo()
         {
-            var data = GeneratePowersOfTwo(0, 10).ToList();
+            var data = TestDataProvider.GeneratePowersOfTwo(0, 10).ToList();
 
             data.ForEach(x => Assert.IsTrue(sut.IsPowerOfTwo(x)));
         }
@@ -77,7 +78,7 @@ namespace ElementsOfProgrammingInterviews.Chapter4.Tests
         [TestMethod]
         public void IsPowerOfTwoTest_ReturnsFalse_GivenEvenNuberThatIsNotPowerOfTwo()
         {
-            var data = Even(0, 10).Except(GeneratePowersOfTwo(1, 5)).ToList();
+            var data = Even(0, 10).Except(TestDataProvider.GeneratePowersOfTwo(1, 5)).ToList();
 
             data.ForEach(x => Assert.IsFalse(sut.IsPowerOfTwo(x)));
         }
@@ -141,22 +142,17 @@ namespace ElementsOfProgrammingInterviews.Chapter4.Tests
 
         private void AssertScenarioWithSumsOfPowersOfTwo(Func<int, byte> bitCounter)
         {
-            var powersOfTwo = GeneratePowersOfTwo(1, 10);
-            var nextPowersOfTwo = GeneratePowersOfTwo(2, 11);
+            var powersOfTwo = TestDataProvider.GeneratePowersOfTwo(1, 10);
+            var nextPowersOfTwo = TestDataProvider.GeneratePowersOfTwo(2, 11);
 
             var sumOfPowerPairs = powersOfTwo.Zip(nextPowersOfTwo, (x, y) => x + y).ToList();
 
             sumOfPowerPairs.ForEach(x => Assert.AreEqual(2, bitCounter(x)));
         }
 
-        private IEnumerable<int> GeneratePowersOfTwo(int start, int end)
-        {
-            return Enumerable.Range(start, end).Select(x => (1 << x));
-        }
-
         private void AssertScenarioWithPowersOfTwo(Func<int, byte> bitCounter)
         {
-            var testData = GeneratePowersOfTwo(1, 10).ToList();
+            var testData = TestDataProvider.GeneratePowersOfTwo(1, 10).ToList();
 
             testData.ForEach(x => Assert.AreEqual(1, bitCounter(x)));
         }
