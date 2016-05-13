@@ -38,17 +38,19 @@ namespace ElementsOfProgrammingInterviews.Chapter5.Tests
         }
 
         [TestMethod]
+        //        Result StandardOutput:	00:19:04.8432546 - with cache
+
         public void ComputeParity_PerformanceTest()
         {
             var sut = new ComputeParityOfAWord(new Chapter4.PrimitiveTypes());
 
             var random = new Random();
-            var input = Enumerable.Repeat(1, 10*ushort.MaxValue).Select(x => (long)random.Next()).ToArray();
+            var input = Enumerable.Repeat(1, int.MaxValue).Select(x => (long)random.Next());
 
             var stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            var actual = sut.ComputeParity(input).ToList();
+            var last = sut.ComputeParity(input).Last();
 
             stopwatch.Stop();
             Console.WriteLine(stopwatch.Elapsed);
