@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ElementsOfProgrammingInterviews.Chapter4
+namespace Problems.Chapter4
 {
     public class PrimitiveTypes
     {

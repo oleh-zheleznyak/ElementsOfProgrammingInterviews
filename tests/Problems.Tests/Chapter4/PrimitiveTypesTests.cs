@@ -1,55 +1,53 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ElementsOfProgrammingInterviews.Chapter4;
+﻿using Problems.Chapter4;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xunit;
 
 namespace ElementsOfProgrammingInterviews.Chapter4.Tests
 {
-    [TestClass]
     public class PrimitiveTypesTests
     {
         private PrimitiveTypes sut;
 
-        [TestInitialize]
-        public void TestInitialize()
+        public PrimitiveTypesTests()
         {
             sut = new PrimitiveTypes();
         }
 
-        [TestMethod]
+        [Fact]
         public void ComputeNumberOfBitsSetTo1_Inefficient_ShouldReturnOne_ForPowersOfTwoTest()
         {
             AssertScenarioWithPowersOfTwo(x => sut.ComputeNumberOfBitsSetTo1_Inefficient(x));
         }
 
-        [TestMethod]
+        [Fact]
         public void ComputeNumberOfBitsSetTo1_ShouldReturnOne_ForPowersOfTwoTest()
         {
             AssertScenarioWithPowersOfTwo(x => sut.ComputeNumberOfBitsSetTo1(x));
         }
 
-        [TestMethod]
+        [Fact]
         public void ComputeNumberOfBitsSetTo1_ShouldReturnTwo_ForTuplesOfPowersOfTwoTest()
         {
             AssertScenarioWithSumsOfPowersOfTwo(x => sut.ComputeNumberOfBitsSetTo1(x));
         }
 
-        [TestMethod]
+        [Fact]
         public void ComputeNumberOfBitsSetTo1_Inefficient_ShouldReturnTwo_ForTuplesOfPowersOfTwoTest()
         {
             AssertScenarioWithSumsOfPowersOfTwo(x => sut.ComputeNumberOfBitsSetTo1_Inefficient(x));
         }
 
-        [TestMethod]
+        [Fact]
         public void RightPropagateRightmostBit_ShouldReturnZero_GivenZero()
         {
-            Assert.AreEqual(0, sut.RightPropagateRightmostBit(0));
+            Assert.Equal(0, sut.RightPropagateRightmostBit(0));
         }
 
-        [TestMethod]
+        [Fact]
         public void RightPropagateRightmostBit_ShouldPropageteRightmostBit()
         {
             AssertBitPropagation("0001", "0001");
@@ -58,50 +56,50 @@ namespace ElementsOfProgrammingInterviews.Chapter4.Tests
             AssertBitPropagation("1000", "1111");
         }
 
-        [TestMethod]
+        [Fact]
         public void IsPowerOfTwoTest_ReturnsTrue_GivenPowerOfTwo()
         {
             var data = GeneratePowersOfTwo(0, 10).ToList();
 
-            data.ForEach(x => Assert.IsTrue(sut.IsPowerOfTwo(x)));
+            data.ForEach(x => Assert.True(sut.IsPowerOfTwo(x)));
         }
 
-        [TestMethod]
+        [Fact]
         public void IsPowerOfTwoTest_ReturnsFalse_GivenOddNumber()
         {
             var data = Odd(1, 10).ToList();
 
-            data.ForEach(x => Assert.IsFalse(sut.IsPowerOfTwo(x)));
+            data.ForEach(x => Assert.False(sut.IsPowerOfTwo(x)));
         }
 
-        [TestMethod]
+        [Fact]
         public void IsPowerOfTwoTest_ReturnsFalse_GivenEvenNuberThatIsNotPowerOfTwo()
         {
             var data = Even(0, 10).Except(GeneratePowersOfTwo(1, 5)).ToList();
 
-            data.ForEach(x => Assert.IsFalse(sut.IsPowerOfTwo(x)));
+            data.ForEach(x => Assert.False(sut.IsPowerOfTwo(x)));
         }
 
-        [TestMethod]
+        [Fact]
         public void ModuloPowerOfTwo_ShouldReturnZero_ForPowerZero()
         {
-            Enumerable.Range(1, 10).ToList().ForEach(x => Assert.AreEqual(0, sut.ModuloPowerOfTwo(x, 0)));
+            Enumerable.Range(1, 10).ToList().ForEach(x => Assert.Equal(0, sut.ModuloPowerOfTwo(x, 0)));
         }
 
-        [TestMethod]
+        [Fact]
         public void ModuloPowerOfTwo_ShouldReturnCorrectValues_WhenDividedByTwo()
         {
-            Odd(1, 10).ToList().ForEach(x => Assert.AreEqual(1, sut.ModuloPowerOfTwo(x, 1)));
-            Even(1, 10).ToList().ForEach(x => Assert.AreEqual(0, sut.ModuloPowerOfTwo(x, 1)));
+            Odd(1, 10).ToList().ForEach(x => Assert.Equal(1, sut.ModuloPowerOfTwo(x, 1)));
+            Even(1, 10).ToList().ForEach(x => Assert.Equal(0, sut.ModuloPowerOfTwo(x, 1)));
         }
 
-        [TestMethod]
+        [Fact]
         public void ModuloPowerOfTwo_ShouldReturnCorrectValues_WhenDividedByFour()
         {
             AssertDivisionByPowerOfTwo(2);
         }
 
-        [TestMethod]
+        [Fact]
         public void ModuloPowerOfTwo_ShouldReturnCorrectValues_WhenDividedByEight()
         {
             AssertDivisionByPowerOfTwo(3);
@@ -117,7 +115,7 @@ namespace ElementsOfProgrammingInterviews.Chapter4.Tests
             var expected = number % (1 << powerOfTwo);
             var actual = sut.ModuloPowerOfTwo(number, powerOfTwo);
 
-            Assert.AreEqual(expected, actual);
+            Assert.Equal(expected, actual);
         }
 
         private static IEnumerable<int> Odd(int seedStart, int seedEnd)
@@ -136,7 +134,7 @@ namespace ElementsOfProgrammingInterviews.Chapter4.Tests
             var expected = Convert.ToInt32(expectedString, 2);
             var actual = sut.RightPropagateRightmostBit(input);
 
-            Assert.AreEqual(expected, actual);
+            Assert.Equal(expected, actual);
         }
 
         private void AssertScenarioWithSumsOfPowersOfTwo(Func<int, byte> bitCounter)
@@ -146,7 +144,7 @@ namespace ElementsOfProgrammingInterviews.Chapter4.Tests
 
             var sumOfPowerPairs = powersOfTwo.Zip(nextPowersOfTwo, (x, y) => x + y).ToList();
 
-            sumOfPowerPairs.ForEach(x => Assert.AreEqual(2, bitCounter(x)));
+            sumOfPowerPairs.ForEach(x => Assert.Equal(2, bitCounter(x)));
         }
 
         private IEnumerable<int> GeneratePowersOfTwo(int start, int end)
@@ -158,7 +156,7 @@ namespace ElementsOfProgrammingInterviews.Chapter4.Tests
         {
             var testData = GeneratePowersOfTwo(1, 10).ToList();
 
-            testData.ForEach(x => Assert.AreEqual(1, bitCounter(x)));
+            testData.ForEach(x => Assert.Equal(1, bitCounter(x)));
         }
     }
 }
