@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Problems.Chapter08_LinkedLists
 {
-    public static class SinglyLinkedListExtensions
+    public static partial class LinkedListExtensions
     {
         public static SinglyLinkedList<T> MergeSortedAscending<T>(this SinglyLinkedList<T> first, SinglyLinkedList<T>? second)
             where T : IEquatable<T>, IComparable<T>

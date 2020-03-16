@@ -22,7 +22,7 @@ namespace Problems.Tests.Chapter08_LinkedLists
 
             Assert.Equal(expected.Length, list.Count);
             Assert.Equal(expected.First(), list.Head.Value);
-            Assert.Equal(expected.Last(), list.Tail.Value);
+            Assert.Equal(expected.Last(), list.Tail.Value); 
 
             Assert.Equal(expected, list.ToArray());
         }

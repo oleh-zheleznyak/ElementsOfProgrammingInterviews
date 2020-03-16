@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Problems.Chapter08_LinkedLists
 {
-    public class SinglyLinkedList<T> : ICollection<T>
+    public class SinglyLinkedList<T> : ISinglyLinkedList<T>, ICollection<T>
         where T : IEquatable<T>
     {
         public SinglyLinkedList() { }
@@ -37,16 +37,18 @@ namespace Problems.Chapter08_LinkedLists
             Count = collection.Count;
         }
 
-        public Node? Head { get; set; }
-        public Node? Tail { get; set; }
+        public Node? Head { get; private set; }
+        public Node? Tail { get; private set; }
 
         public int Count { get; private set; }
 
         public bool IsReadOnly => throw new NotImplementedException();
 
+        ISinglyLinkedListNode<T> ISinglyLinkedList<T>.Head => Head;
+
         public void Add(T item)
         {
-            var node = new Node() { Value = item };
+            var node = new Node(item);
             if (Tail is null) // count == 0
             {
                 Head = node;
@@ -126,7 +128,27 @@ namespace Problems.Chapter08_LinkedLists
         IEnumerator IEnumerable.GetEnumerator() =>
             this.GetEnumerator();
 
-        public class Node
+        public void Reverse()
+        {
+            if (Count == 0) return;
+
+            var current = Head;
+            Tail = current;
+            SinglyLinkedList<T>.Node previous = null;
+
+            while (current != null)
+            {
+                var next = current.Next;
+                current.Next = previous;
+
+                previous = current;
+                current = next;
+            }
+
+            Head = previous;
+        }
+
+        public class Node : ISinglyLinkedListNode<T>
         {
             public Node() { }
 
@@ -135,8 +157,10 @@ namespace Problems.Chapter08_LinkedLists
                 Value = value;
             }
 
-            public T Value { get; set; }
-            public Node Next { get; set; }
+            public T Value { get; }
+            public Node? Next { get; internal set; }
+
+            ISinglyLinkedListNode<T>? ISinglyLinkedListNode<T>.Next => Next;
         }
     }
 }
