@@ -51,7 +51,7 @@ namespace Problems.Chapter09_Stacks
         {
             GrowCollectionIfNeeded();
 
-            tail++;
+            tail = (tail + 1) % storage.Length;
             count++;
 
             storage[tail] = value;
@@ -73,6 +73,7 @@ namespace Problems.Chapter09_Stacks
                 head = 0;
                 tail = count - 1;
             }
+            storage = newStorage;
         }
 
         public T Dequeue()
@@ -89,7 +90,7 @@ namespace Problems.Chapter09_Stacks
 
         public IEnumerator<T> GetEnumerator()
         {
-            for (var i = head; i <= Math.Min(tail, storage.Length - 1); i++)
+            for (var i = head; i <= (tail < head ? storage.Length - 1 : tail); i++)
                 yield return storage[i];
 
             if (tail < head)
