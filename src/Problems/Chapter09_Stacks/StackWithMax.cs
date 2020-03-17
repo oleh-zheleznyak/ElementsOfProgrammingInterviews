@@ -30,6 +30,8 @@ namespace Problems.Chapter09_Stacks
 
         public int Count => mainStorage.Count;
 
+        public T Max => maxStorage.Peek();
+
         public void Push(T value)
         {
             if (mainStorage.Count == 0)
