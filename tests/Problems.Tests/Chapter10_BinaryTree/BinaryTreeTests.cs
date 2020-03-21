@@ -72,5 +72,29 @@ namespace Problems.Tests.Chapter10_BinaryTree
 
             Assert.Equal(expected, actual);
         }
+
+        [Fact]
+        public void InorderTest()
+        {
+            var preorder = binaryTree.Inorder().ToArray();
+
+            var actual = new string(preorder);
+
+            var expected = "DCEBFHGAJLMKNIOP";
+
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void PostorderTest()
+        {
+            var preorder = binaryTree.Postorder().ToArray();
+
+            var actual = new string(preorder);
+
+            var expected = "DECHGFBMLNKJPOIA";
+
+            Assert.Equal(expected, actual);
+        }
     }
 }

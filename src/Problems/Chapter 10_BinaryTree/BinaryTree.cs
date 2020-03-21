@@ -17,9 +17,7 @@ namespace Problems.Chapter_10_BinaryTree
 
         /// <summary>
         /// visit the root, traverse left subtree,  traverse right subtree
-        /// 
         /// </summary>
-        /// <returns></returns>
         public IEnumerable<T> Preorder()
         {
             var stack = new Stack<BinaryTree<T>>();
@@ -33,6 +31,52 @@ namespace Problems.Chapter_10_BinaryTree
                 if (node.Right != null) stack.Push(node.Right);
                 if (node.Left != null) stack.Push(node.Left);
             }
+        }
+
+        /// <summary>
+        /// traverse left subtree, traverse right subtree, visit the root
+        /// </summary>
+        public IEnumerable<T> Postorder()
+        {
+            var queue = new Queue<T>();
+
+            Postorder(this, queue);
+
+            return queue;
+        }
+
+        private void Postorder(BinaryTree<T> node, Queue<T> values)
+        {
+            if (node is null) return;
+
+            Postorder(node.Left, values);
+
+            Postorder(node.Right, values);
+
+            values.Enqueue(node.Value);
+        }
+
+        /// <summary>
+        /// traverse left subtree, visit the root, traverse right subtree
+        /// </summary>
+        public IEnumerable<T> Inorder()
+        {
+            var queue = new Queue<T>();
+
+            Inorder(this, queue);
+
+            return queue;
+        }
+
+        private void Inorder(BinaryTree<T> node, Queue<T> values)
+        {
+            if (node is null) return;
+
+            Inorder(node.Left, values);
+
+            values.Enqueue(node.Value);
+
+            Inorder(node.Right, values);
         }
     }
 }
