@@ -29,16 +29,18 @@ namespace Problems.Chapter05_PrimitiveTypes
             return parity;
         }
 
-        public ushort CalculateParity_Efficient(ushort word)
+        public ushort CalculateParity_AssociativeXor(ushort word)
         {
-            ushort parity = 0;
-            while (word > 0)
-            {
-                parity = (ushort)(parity ^ 1);
-                word &= (ushort)(word - 1);
-            }
+            long w = word;
+            w ^= (w >> 32);
+            w ^= (w >> 16);
+            w ^= (w >> 8);
+            w ^= (w >> 4);
+            w ^= (w >> 2);
+            w ^= (w >> 1);
+            w &= 1;
 
-            return parity;
+            return (ushort)w;
         }
 
         public ulong CalculateParity_BruteForce(ulong[] words)
@@ -73,11 +75,11 @@ namespace Problems.Chapter05_PrimitiveTypes
 
                     if (!cachedParity[subWord].HasValue)
                     {
-                        cachedParity[subWord] = CalculateParity_Efficient(subWord);
+                        cachedParity[subWord] = CalculateParity_AssociativeXor(subWord);
                     }
                     wordParity = (ushort)(wordParity ^ cachedParity[subWord]!.Value);
                 }
-                parity = parity ^ wordParity;
+                parity ^= wordParity;
             }
 
             return parity;

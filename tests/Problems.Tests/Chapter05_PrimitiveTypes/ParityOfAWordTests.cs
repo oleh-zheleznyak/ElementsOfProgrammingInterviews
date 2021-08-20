@@ -31,6 +31,9 @@ namespace Problems.Tests.Chapter05_PrimitiveTypes
         [InlineData(new ulong[] { 0b_0000, 0b_0011 }, 0)]
         [InlineData(new ulong[] { 0b_0001, 0b_0111 }, 0)]
         [InlineData(new ulong[] { 0b_0011, 0b_0001 }, 1)]
+        [InlineData(new ulong[] { 0b_0000, 0b_0001 }, 1)]
+        [InlineData(new ulong[] { 0b_0000, 0b_0000 }, 0)]
+        [InlineData(new ulong[] { 0b_1111, 0b_1111 }, 0)]
         public void ParityTestCached(ulong[] word, ulong expectedParity)
         {
             Assert.Equal(expectedParity, parity.CalculateParity_Cached(word));
