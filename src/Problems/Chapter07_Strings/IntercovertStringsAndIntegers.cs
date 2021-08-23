@@ -18,7 +18,7 @@ namespace Problems.Chapter07_Strings
         /// Converts string to integer
         /// </summary>
         /// <remarks>
-        /// Cannot use Int.Parse or Convert.ToInt32
+        /// Cannot use Int.Parse or Convert.ToInt32 
         /// Will NOT support IFormatProviders or NumberStyles in this excersise
         /// </remarks>
         public int StringToInteger(string input)
