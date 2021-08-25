@@ -8,6 +8,7 @@ namespace Problems.Tests.Chapter07_Strings
         BaseConversion baseConversion = new BaseConversion();
 
         [Theory]
+        [InlineData("0", 2, 10, "0")]
         [InlineData("1", 2, 10, "1")]
         [InlineData("10", 2, 10, "2")]
         [InlineData("11", 2, 10, "3")]
@@ -26,6 +27,23 @@ namespace Problems.Tests.Chapter07_Strings
         public void ConvertBaseTest(string numberInBaseFrom, byte baseFrom, byte baseTo, string expectedNumberBaseTo)
         {
             Assert.Equal(expectedNumberBaseTo, baseConversion.ConvertBase(numberInBaseFrom, baseFrom, baseTo));
+        }
+
+        [Theory]
+        [InlineData(1,2,"1")]
+        [InlineData(2, 2, "10")]
+        [InlineData(3, 2, "11")]
+        [InlineData(4, 2, "100")]
+        [InlineData(1, 3, "1")]
+        [InlineData(2, 3, "2")]
+        [InlineData(3, 3, "10")]
+        [InlineData(9, 16, "9")]
+        [InlineData(10, 16, "A")]
+        [InlineData(15, 16, "F")]
+        [InlineData(16, 16, "10")]
+        public void FormatInBaseFromLeastSignificantTest(int number, byte baseTo, string expectedFormattedValue)
+        {
+            Assert.Equal(expectedFormattedValue, baseConversion.FormatInBaseFromLeastSignificant(number, baseTo));
         }
     }
 }

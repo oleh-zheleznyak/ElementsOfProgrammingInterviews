@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Problems.Chapter07_Strings
 {
@@ -12,11 +13,11 @@ namespace Problems.Chapter07_Strings
             if (baseTo < 2 || baseTo > 16) throw new ArgumentException(nameof(baseTo));
 
             if (baseTo == baseFrom) return numberBaseFrom;
-            if (numberBaseFrom == "1") return "1";
+            if (numberBaseFrom == "1" || numberBaseFrom == "0") return numberBaseFrom;
 
             var numberBaseTen = ConvertToBaseTen(numberBaseFrom, baseFrom);
 
-            var result = FormatInBase(numberBaseTen, baseTo);
+            var result = FormatInBaseFromMostSignificant(numberBaseTen, baseTo);
 
             return result;
         }
@@ -33,7 +34,14 @@ namespace Problems.Chapter07_Strings
             return total;
         }
 
-        private string FormatInBase(int number, byte baseTo)
+        /// <summary>
+        /// Solution in the book uses string concatenation
+        /// In many programming languages strings are immutable, and string concatenation
+        /// creates a new string every time, copying old string, extra O(n) time, space 
+        /// + pressure on GC
+        /// (That is why .NET and Java have StringBuilder)
+        /// </summary>
+        private string FormatInBaseFromMostSignificant(int number, byte baseTo)
         {
             var (maxPower, baseToMaxPower) = CalculateMaxPower(number, baseTo);
             var charArray = new char[maxPower];
@@ -47,6 +55,26 @@ namespace Problems.Chapter07_Strings
                 remainder -= multiplier * baseToMaxPower;
             }
             return new string(charArray);
+        }
+
+        public string FormatInBaseFromLeastSignificant(int number, byte baseTo)
+        {
+            // not using linked list here to avoid object allocations (per LinkedListNode)
+            // stack and queue are based on array, and increase size by a factor of two, just like list
+            var numberAsString = new List<char>(); // no good approximation for capacity - we can't use number.ToString().Length
+            int remainder = number;
+            do
+            {
+                var least = remainder % baseTo;
+                remainder /= baseTo;
+                var c = FormatIntAsChar(least); 
+                numberAsString.Add(c); // with List, adding at the end is most efficient, no shifting (or use linked list, queue)
+            }
+            while (remainder > 0);
+
+            numberAsString.Reverse(); // additional pass
+            
+            return new string(numberAsString.ToArray()); // meh, two copies of string, one with .ToArray(), other inside string class
         }
 
         private char FormatIntAsChar(int number) =>
@@ -75,7 +103,7 @@ namespace Problems.Chapter07_Strings
             {
                 return c - '0';
             }
-            if (c>='A' && c<='F')
+            else if (c>='A' && c<='F')
             {
                 return c - 'A' + 10;
             }
