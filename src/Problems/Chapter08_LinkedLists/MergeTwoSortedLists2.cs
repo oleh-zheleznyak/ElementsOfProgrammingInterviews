@@ -1,36 +1,8 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace Problems.Chapter08_LinkedLists
 {
-    public class Node<T> : IEnumerable<T>
-    {
-        public Node(T value, Node<T>? next = null)
-        {
-            Value = value;
-            Next = next;
-        }
-
-        public T Value { get; set; }
-        public Node<T>? Next { get; set; }
-
-        public IEnumerator<T> GetEnumerator()
-        {
-            yield return Value;
-            var node = Next;
-            while (node != null)
-            {
-                yield return node.Value;
-                node = node.Next;
-            }
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
-    }
     public class MergeTwoSortedLists2
     {
         public Node<T> MergeSorted<T>(Node<T> list1, Node<T> list2, IComparer<T>? comparer = null)
