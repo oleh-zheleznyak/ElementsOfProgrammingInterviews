@@ -41,58 +41,35 @@ namespace Problems.Chapter08_LinkedLists
             if (list1 == list2) return list1;
             comparer ??= Comparer<T>.Default;
 
-            var node1 = list1;
-            var node2 = list2;
-
-            Node<T> head = GetSmallerAndAdvance(comparer, ref node1, ref node2);
-            Node<T> current = head;
+            var dummyHead = new Node<T>(default);
+            var current = dummyHead;
 
             do
             {
-                current.Next = GetSmallerAndAdvance(comparer, ref node1, ref node2);
+                current.Next = GetSmallerAndAdvance(comparer, ref list1, ref list2);
                 current = current.Next;
             }
-            while (node1 is not null || node2 is not null);
+            while (list1 is not null && list2 is not null);
 
-            return head;
+            current.Next = list1 ?? list2;
+
+            return dummyHead.Next;
 
         }
 
         private static Node<T> GetSmallerAndAdvance<T>(IComparer<T> comparer, ref Node<T> node1, ref Node<T> node2) where T : struct, IComparable<T>
         {
             Node<T> smaller;
-            if (node1 is not null && node2 is not null)
-            {
-                var comparison = comparer.Compare(node1.Value, node2.Value);
-                if (comparison < 0)
-                {
-                    smaller = node1;
-                    node1 = node1.Next;
-                }
-                else if (comparison > 0)
-                {
-                    smaller = node2;
-                    node2 = node2.Next;
-                }
-                else
-                {
-                    smaller = node1;
-                    node1 = node1.Next;
-                }
-            }
-            else if (node1 is not null)
+            var comparison = comparer.Compare(node1.Value, node2.Value);
+            if (comparison < 0)
             {
                 smaller = node1;
                 node1 = node1.Next;
             }
-            else if (node2 is not null)
+            else
             {
                 smaller = node2;
                 node2 = node2.Next;
-            }
-            else
-            {
-                throw new InvalidOperationException("cannot find bigger of two null values");
             }
             return smaller;
         }
