@@ -17,7 +17,7 @@ namespace Problems.Chapter08_LinkedLists
             if (node.Next is null) return node;
             if (start == end) return node;
 
-            return ReverseSublistBetweenIndices_Impl(node, start, end);
+            return ReverseSublistBetweenIndices_BookImpl(node, start, end);
         }
 
         private Node<T> ReverseSublistBetweenIndices_Impl<T>(Node<T> node, int start, int end)
@@ -51,6 +51,25 @@ namespace Problems.Chapter08_LinkedLists
                 return node;
             }
             return prev;
+        }
+
+        private Node<T> ReverseSublistBetweenIndices_BookImpl<T>(Node<T> node, int start, int end)
+        {
+            var dummyHead = new Node<T>(default, node); // 11->3->5->7->2
+            var sublistHead = dummyHead;
+            int k = 1;
+            while (k++ < start) sublistHead = sublistHead.Next;
+
+            var sublistIter = sublistHead.Next;
+
+            while(start++<end)
+            {
+                var temp = sublistIter.Next; // 5                               // 7
+                sublistIter.Next = temp.Next; // 11->3 (->7) 5 ->7->2           // 11->5->3 (->2) 7->2
+                temp.Next = sublistHead.Next; // 11->3 (->7) 5 (->3) 7->2       // 11->5->3 (->2) 7 (->5) 2
+                sublistHead.Next = temp;    // 11 (->5) 3 (->7) 5 (->3) 7->2 // 11->5->3->7->2 // 11(->7)  5->3 (->2) 7 (->5) 2 // 11->7->5->3->2
+            }
+            return dummyHead.Next;
         }
     }
 }
