@@ -8,35 +8,49 @@ namespace Problems.Chapter08_LinkedLists
 {
     public class ReverseASingleSublist
     {
-        public void ReverseSublistBetweenIndices<T>(Node<T> node, int start, int end)
+        public Node<T> ReverseSublistBetweenIndices<T>(Node<T> node, int start, int end)
         {
             if (node is null) throw new ArgumentNullException(nameof(node));
             if (start > end) throw new ArgumentException($"{nameof(start)}>{nameof(end)}");
+            if (start < 1) throw new ArgumentOutOfRangeException(nameof(start));
 
-            if (node.Next is null) return;
-            if (start == end) return;
+            if (node.Next is null) return node;
+            if (start == end) return node;
 
-            var current = node;
-            var prev = node;
+            return ReverseSublistBetweenIndices_Impl(node, start, end);
+        }
+
+        private Node<T> ReverseSublistBetweenIndices_Impl<T>(Node<T> node, int start, int end)
+        {
+            Node<T>? prev = null, next, before_start, at_start, current = node;
+
+            // move to start position
             for (int i = 1; i < start; i++)
             {
-                if (current is null) throw new ArgumentOutOfRangeException(nameof(start));
                 prev = current;
                 current = current.Next;
             }
+            before_start = prev;
+            at_start = current;
 
-            for (int j = start; j <= end - start + 1; j++)
+            prev = current;
+            current = current.Next;
+
+            for (int j = start + 1; j <= end; j++)
             {
-                if (current is null) throw new ArgumentOutOfRangeException(nameof(end));
-                var tmp = current.Next;
-
-                prev.Next = current.Next;
-                current.Next = tmp.Next;
-                tmp.Next = current;
-
-                prev = tmp;
-                current = tmp.Next;
+                next = current.Next;
+                current.Next = prev;
+                prev = current;
+                current = next;
             }
+
+            at_start.Next = current;
+            if (before_start != null)
+            {
+                before_start.Next = prev;
+                return node;
+            }
+            return prev;
         }
     }
 }

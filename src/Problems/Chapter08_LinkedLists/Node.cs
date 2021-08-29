@@ -28,7 +28,7 @@ namespace Problems.Chapter08_LinkedLists
 
         public override string ToString()
         {
-            return $"({Value};{Next})";
+            return Value + (Next == null ? "-x" : "->");
         }
 
         public IEnumerator<T> GetEnumerator()
