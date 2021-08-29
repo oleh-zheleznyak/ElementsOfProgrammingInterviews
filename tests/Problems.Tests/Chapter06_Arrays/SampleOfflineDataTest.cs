@@ -10,7 +10,7 @@ namespace Problems.Tests.Chapter06_Arrays
 
         [Theory]
         [InlineData(new int[] { 1, 2 }, 0, new int[] { })]
-        [InlineData(new int[] { 1, 2 }, 2, new int[] { 1, 2 })]
+        [InlineData(new int[] { 1, 2 }, 2, new int[] { 2, 1 })]
         [InlineData(new int[] { 1, 1, 1 }, 1, new int[] { 1 })]
         public void SampleTest(int[] data, int sampleSize, int[] expected)
         {
