@@ -14,6 +14,7 @@ namespace Problems.Chapter08_LinkedLists
             var fast = head;
             var hasCyckle = false;
 
+            // detect cycle
             while (fast != null && !hasCyckle)
             {
                 slow = slow.Next;
@@ -22,21 +23,27 @@ namespace Problems.Chapter08_LinkedLists
                 if (slow == fast)
                     hasCyckle = true;
             }
-
             if (!hasCyckle) return null;
 
-            var nodesInCycle = new HashSet<Node<T>>();
+            // measure cycle length C
+            var cycleLength = 0;
             do
             {
-                nodesInCycle.Add(slow); // last step will try to add fast, and will return false
                 slow = slow.Next;
+                cycleLength++;
+            }
+            while (slow != fast);
 
-            } while (slow != fast);
-
+            // two iterators cycle length C apart
             slow = head;
-            while (!nodesInCycle.Contains(slow))
+            fast = head;
+            for (int i = 0; i < cycleLength; i++) fast = fast.Next;
+
+            // advance in tandem to meet at cycle start
+            while (slow != fast)
             {
                 slow = slow.Next;
+                fast = fast.Next;
             }
             return slow;
         }

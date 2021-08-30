@@ -23,6 +23,8 @@ namespace Problems.Tests.Chapter08_LinkedLists
         public static IEnumerable<object[]> TestData()
         {
             yield return TwoElementCycle();
+            yield return NoCycle();
+            yield return TwoElementCycleAtSecondNode();
         }
 
         private static object[] TwoElementCycle()
@@ -36,6 +38,33 @@ namespace Problems.Tests.Chapter08_LinkedLists
             {
                 first,
                 first
+            };
+        }
+
+        private static object[] NoCycle()
+        {
+            var list = TestHelpers.ToSinglyLinkedList(1, 2, 3);
+
+            return new object[]
+{
+                list,
+                null
+};
+        }
+
+        private static object[] TwoElementCycleAtSecondNode()
+        {
+            var first = new Node<int>(1);
+            var second = new Node<int>(2);
+            var third = new Node<int>(3);
+            first.Next = second;
+            second.Next = third;
+            third.Next = second;
+
+            return new object[]
+            {
+                first,
+                second
             };
         }
     }
