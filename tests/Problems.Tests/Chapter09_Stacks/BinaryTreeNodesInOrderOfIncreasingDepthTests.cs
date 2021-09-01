@@ -20,6 +20,14 @@ namespace Problems.Tests.Chapter09_Stacks
             Assert.Equal(expectedArrayOfNodes, actual);
         }
 
+        [Theory]
+        [MemberData(nameof(TestData))]
+        public void GetBinaryTreeLevels_SolutionFromTextbookTest(BinaryTreeNode<int> binaryTree, int[][] expectedArrayOfNodes)
+        {
+            var actual = traversal.GetBinaryTreeLevels_SolutionFromTextbook(binaryTree);
+            Assert.Equal(expectedArrayOfNodes, actual);
+        }
+
         public static IEnumerable<object[]> TestData()
         {
             yield return TwoLevelTree();

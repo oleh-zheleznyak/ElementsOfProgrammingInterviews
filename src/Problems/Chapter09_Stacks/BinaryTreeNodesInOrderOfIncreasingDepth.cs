@@ -48,5 +48,36 @@ namespace Problems.Chapter09_Stacks
                 yield return current;
             }
         }
+
+        /// <summary>
+        /// The solution from the book, implemented below is more elegant, since it does not deal with depth explicitly
+        /// However, it is also less efficient
+        ///  - as it specifically allocates collections for every tree level
+        ///  - uses eager execution (not lazy)
+        /// </summary>
+        public IList<IList<T>> GetBinaryTreeLevels_SolutionFromTextbook(BinaryTreeNode<T> root)
+        {
+            if (root == null) throw new ArgumentNullException(nameof(root));
+            var thisLevelQueue = new Queue<BinaryTreeNode<T>>();
+            var result = new List<IList<T>>();
+
+            thisLevelQueue.Enqueue(root);
+            while (thisLevelQueue.Count > 0)
+            {
+                var thisLevel = new List<T>();
+                var nextLevelQueue = new Queue<BinaryTreeNode<T>>();
+                while (thisLevelQueue.Count > 0)
+                {
+                    var node = thisLevelQueue.Dequeue();
+                    thisLevel.Add(node.Value);
+
+                    if (node.Left != null) nextLevelQueue.Enqueue(node.Left);
+                    if (node.Right != null) nextLevelQueue.Enqueue(node.Right);
+                }
+                result.Add(thisLevel);
+                thisLevelQueue = nextLevelQueue;
+            }
+            return result;
+        }
     }
 }
