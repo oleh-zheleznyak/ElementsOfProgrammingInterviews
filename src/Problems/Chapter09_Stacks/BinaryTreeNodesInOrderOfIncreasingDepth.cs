@@ -11,25 +11,22 @@ namespace Problems.Chapter09_Stacks
     /// </summary>
     public class BinaryTreeNodesInOrderOfIncreasingDepth<T>
     {
-        public IEnumerable<T[]> GetBinaryTreeLevels(BinaryTreeNode<T> root)
+        public IEnumerable<IEnumerable<T>> GetBinaryTreeLevels(BinaryTreeNode<T> root)
         {
             if (root == null) throw new ArgumentNullException(nameof(root));
 
             // BFT - breadth first traversal
             var depth = 0;
-            var index = 0;
-            var storage = new T[1];
-            foreach (var item in BreadthFirstTraversal(root))
+            var storage = new Queue<T>();
+            foreach (var (Node, Depth) in BreadthFirstTraversal(root))
             {
-                if (item.Depth != depth)
+                if (Depth != depth)
                 {
                     yield return storage;
                     depth++;
-                    index = 0;
-                    var maxStorageSize = (int)Math.Pow(2, depth); // this allocates more than needed (only full levels)
-                    storage = new T[maxStorageSize];
+                    storage.Clear();
                 }
-                storage[index++] = item.Node.Value;
+                storage.Enqueue(Node.Value);
             }
             yield return storage;
         }
