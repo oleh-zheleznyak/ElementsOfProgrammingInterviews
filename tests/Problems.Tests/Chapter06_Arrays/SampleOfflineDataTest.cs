@@ -15,7 +15,7 @@ namespace Problems.Tests.Chapter06_Arrays
         public void SampleTest(int[] data, int sampleSize, int[] expected)
         {
             sampleOfflineData.Sample(data, sampleSize);
-            var actual = data.Take(sampleSize).ToArray();
+            var actual = data.Take(sampleSize).OrderByDescending(x => x).ToArray();
             Assert.Equal(expected, actual);
         }
     }
