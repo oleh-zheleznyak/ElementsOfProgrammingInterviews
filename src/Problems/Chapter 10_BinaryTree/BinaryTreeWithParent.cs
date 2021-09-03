@@ -24,5 +24,7 @@
         public BinaryTreeWithParent<T>? Parent { get; private set; }
 
         public bool IsLeaf => (Left is null) && (Right is null);
+
+        public override string ToString() => Value?.ToString();
     }
 }

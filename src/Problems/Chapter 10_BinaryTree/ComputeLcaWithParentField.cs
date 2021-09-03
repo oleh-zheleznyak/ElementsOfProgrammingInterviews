@@ -5,26 +5,45 @@ namespace Problems.Chapter_10_BinaryTree
 {
     public class ComputeLcaWithParentField<T>
     {
-        public BinaryTreeWithParent<T>? ComputeLowestCommonAncestor(BinaryTreeWithParent<T> node1, BinaryTreeWithParent<T> node2)
+        public BinaryTreeWithParent<T>? ComputeLowestCommonAncestor(BinaryTreeWithParent<T>? node1, BinaryTreeWithParent<T>? node2)
         {
             if (node1 == null) throw new ArgumentNullException(nameof(node1));
             if (node2 == null) throw new ArgumentNullException(nameof(node2));
-            if (ReferenceEquals(node1, node2)) return node1;
+            if (ReferenceEquals(node1, node2)) return node1; // node can be a descendant of itself, and so the LCA as well
 
-            var visitedNodes = new HashSet<BinaryTreeWithParent<T>>();
+            var node1Depth = GetDepth(node1);
+            var node2Depth = GetDepth(node2);
 
-            while (node1.Parent!=null)
+            if (node2Depth > node1Depth)
+                node2 = TraverseUp(node2, node2Depth - node1Depth);
+            else
+                node1 = TraverseUp(node1, node1Depth - node2Depth);
+
+            while (node1 != node2)
             {
-                node1 = node1.Parent;
-                visitedNodes.Add(node1);
+                node1 = node1?.Parent;
+                node2 = node2?.Parent;
             }
 
-            while (node2.Parent!=null)
+            return node1;
+        }
+
+        private BinaryTreeWithParent<T>? TraverseUp(BinaryTreeWithParent<T>? node, int steps)
+        {
+            for (int i = 0; i < steps; i++)
+                node = node?.Parent;
+            return node;
+        }
+
+        private int GetDepth(BinaryTreeWithParent<T> node)
+        {
+            var depth = 0;
+            while (node?.Parent != null)
             {
-                node2 = node2.Parent;
-                if (visitedNodes.Contains(node2)) return node2;
+                depth++;
+                node = node.Parent;
             }
-            return null;
+            return depth;
         }
     }
 }

@@ -23,6 +23,7 @@ namespace Problems.Tests.Chapter10_BinaryTree
         public static IEnumerable<object[]> TestData()
         {
             yield return BalancedTree();
+            yield return SkewedTree();
         }
 
         private static object[] BalancedTree()
@@ -38,6 +39,24 @@ namespace Problems.Tests.Chapter10_BinaryTree
                 tree.Left,
                 tree.Right,
                 tree,
+            };
+        }
+
+        private static object[] SkewedTree()
+        {
+            var tree = new BinaryTreeWithParent<int>(1)
+            {
+                Right = new BinaryTreeWithParent<int>(2)
+                {
+                    Right = new BinaryTreeWithParent<int>(3)
+                }
+            };
+
+            return new object[]
+            {
+                tree.Right.Right,
+                tree.Right,
+                tree.Right,
             };
         }
     }
