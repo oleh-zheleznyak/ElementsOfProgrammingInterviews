@@ -29,5 +29,18 @@ namespace Problems.Tests.Chapter11_Heaps
             var actualMax = maxHeap.Peek();
             Assert.Equal(expectedPoppedMax, actualMax);
         }
+
+        [Theory]
+        [InlineData(new int[] { 1, 2 }, 3, 3)]
+        [InlineData(new int[] { 1, 3, 2 }, 4, 4)]
+        [InlineData(new int[] { 1, 3, 4, 2 }, 3, 4)]
+        [InlineData(new int[] { 1, 3, 2, 5, 4 }, 6, 6)]
+        public void CreateAndPushTests(int[] initalArray, int pushElement, int expectedMax)
+        {
+            var maxHeap = new MaxHeap<int>(initalArray);
+            maxHeap.Push(pushElement);
+            var actualMax = maxHeap.Peek();
+            Assert.Equal(expectedMax, actualMax);
+        }
     }
 }

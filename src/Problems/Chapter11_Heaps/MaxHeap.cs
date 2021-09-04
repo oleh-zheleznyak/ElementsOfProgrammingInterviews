@@ -32,10 +32,28 @@ namespace Problems.Chapter11_Heaps
 
         public void Push(T value)
         {
-            storage[elementCount] = value;
-            storage.Swap(0, elementCount++);
-            MaxHeapify(0);
+            EnsureCapacity();
+            var newIndex = elementCount;
+            storage[newIndex] = value;
+            elementCount++;
+            while (newIndex > 0 && Compare(newIndex, Parent(newIndex)) > 0)
+            {
+                var parent = Parent(newIndex);
+                storage.Swap(newIndex, parent);
+                newIndex = parent;
+            }
         }
+
+        private void EnsureCapacity()
+        {
+            if (storage.Length == elementCount)
+            {
+                var newStorage = new T[storage.Length * 2];
+                Array.Copy(storage, 0, newStorage, 0, storage.Length);
+                storage = newStorage;
+            }
+        }
+
         public T Peek()
         {
             EnsureNotEmpty();
@@ -63,7 +81,7 @@ namespace Problems.Chapter11_Heaps
 
             if (largest != index)
             {
-                storage.Swap(largest,index);
+                storage.Swap(largest, index);
                 MaxHeapify(largest);
             }
         }
@@ -76,6 +94,9 @@ namespace Problems.Chapter11_Heaps
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static int RightChild(int i) => 2 * i + 2; // TODO: how to optimize?
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static int Parent(int i) => (int)Math.Ceiling((double)i / 2) - 1; // need to optimize - change indexing?
 
         public int Count => elementCount;
 
