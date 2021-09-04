@@ -30,6 +30,21 @@ namespace Problems.Chapter11_Heaps
                 MaxHeapify(i);
         }
 
+        /// <summary>
+        /// NOTE: this is for excersising the heapsort only
+        /// NOT a good approach to have internal state of the heap destroyed by a method
+        /// Not a good api, to have parameterless sort method
+        /// </summary>
+        public IEnumerable<T> Sort()
+        {
+            while (elementCount > 0)
+            {
+                storage.Swap(0, --elementCount);
+                yield return storage[elementCount];
+                MaxHeapify(0);
+            }
+        }
+
         public void Push(T value)
         {
             EnsureCapacity();

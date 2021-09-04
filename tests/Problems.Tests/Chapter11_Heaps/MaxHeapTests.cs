@@ -1,4 +1,6 @@
 ﻿using Problems.Chapter11_Heaps;
+using System.Linq;
+using System;
 using Xunit;
 
 namespace Problems.Tests.Chapter11_Heaps
@@ -41,6 +43,19 @@ namespace Problems.Tests.Chapter11_Heaps
             maxHeap.Push(pushElement);
             var actualMax = maxHeap.Peek();
             Assert.Equal(expectedMax, actualMax);
+        }
+
+        [Theory]
+        [InlineData(new int[] { 2, 1 })]
+        [InlineData(new int[] { 1, 3, 2 })]
+        [InlineData(new int[] { 1, 3, 4, 2 })]
+        [InlineData(new int[] { 1, 3, 2, 5, 4 })]
+        public void SortTests(int[] initalArray)
+        {
+            var maxHeap = new MaxHeap<int>(initalArray);
+            var actual = maxHeap.Sort().ToArray();
+            Array.Sort(initalArray, (x, y) => y - x);
+            Assert.Equal(initalArray, actual);
         }
     }
 }
