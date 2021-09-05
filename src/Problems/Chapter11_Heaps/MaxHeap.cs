@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
 namespace Problems.Chapter11_Heaps
 {
-    public class MaxHeap<T>
+    public class MaxHeap<T> : IEnumerable<T>, IReadOnlyCollection<T>
         where T : notnull, IComparable<T>
     {
         private T[] storage;
@@ -18,10 +19,10 @@ namespace Problems.Chapter11_Heaps
             this.comparer = comparer ?? Comparer<T>.Default;
         }
 
-        public MaxHeap(T[] array)
+        public MaxHeap(T[] array, IComparer<T>? comparer = null)
         {
             if (array == null) throw new ArgumentNullException(nameof(array));
-            comparer = Comparer<T>.Default;
+            this.comparer = comparer ?? Comparer<T>.Default;
 
             storage = new T[array.Length];
             Array.Copy(array, storage, array.Length);
@@ -121,5 +122,13 @@ namespace Problems.Chapter11_Heaps
         {
             if (storage.Length == 0) throw new InvalidOperationException("Heap is empty");
         }
+
+        public IEnumerator<T> GetEnumerator()
+        {
+            for (int i = 0; i < elementCount; i++)
+                yield return storage[i];
+        }
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }
