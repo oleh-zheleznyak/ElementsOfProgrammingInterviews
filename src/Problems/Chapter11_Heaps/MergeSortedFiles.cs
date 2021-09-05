@@ -10,25 +10,54 @@ namespace Problems.Chapter11_Heaps
         where T : IComparable<T>
     {
         /// <remarks>
-        /// This is as required in the task, but not at all C#-ish, signature should use IEnumerable or IReadonlyCollection
+        /// One might argue that to adhere to C# method signature should use IEnumerable or IReadonlyCollection
+        /// To sort the elements, we need to consume the whole sequence, however, so concept of "lazyness" is not applicable
         /// </remarks>
         public IEnumerable<T> MergeSortedSequences(T[][] sequences)
         {
             if (sequences == null) throw new ArgumentNullException(nameof(sequences));
-            if (sequences.Length == 0) return Array.Empty<T>();
-            if (sequences.Length == 1) return sequences[0];
+            if (sequences.Length == 0) yield break;
 
-            var maxHeap = new MaxHeap<T>(sequences[0]);
+            var comparer = new IteratorComparer(sequences, Comparer<T>.Default);
+            var maxHeap = new MaxHeap<(int Next, int Index)>((ushort)sequences.Length, comparer);
 
-            for (int i = 1; i < sequences.Length; i++)
+
+            for (int i = 0; i < sequences.Length; i++)
             {
-                for (int j = 0; j < sequences[i].Length; j++)
+                if (sequences[i] != null && sequences[i].Length > 0)
                 {
-                    maxHeap.Push(sequences[i][j]);
+                    maxHeap.Push((Next: 0, Index: i));
                 }
             }
 
-            return maxHeap.Sort();
+            while (maxHeap.Count > 0)
+            {
+                var max = maxHeap.Pop();
+                yield return sequences[max.Index][max.Next];
+
+                if (max.Next + 1 < sequences[max.Index].Length)
+                    maxHeap.Push((max.Next + 1, max.Index));
+            }
+        }
+
+        private class IteratorComparer : IComparer<(int Next, int Index)>
+        {
+            private readonly T[][] valuesLookup;
+            private readonly IComparer<T> comparer;
+
+            public IteratorComparer(T[][] valuesLookup, IComparer<T> comparer)
+            {
+                this.valuesLookup = valuesLookup;
+                this.comparer = comparer;
+            }
+
+            public int Compare((int Next, int Index) x, (int Next, int Index) y)
+            {
+                var value_x = valuesLookup[x.Index][x.Next];
+                var value_y = valuesLookup[y.Index][y.Next];
+
+                return comparer.Compare(value_x, value_y);
+            }
         }
     }
 }

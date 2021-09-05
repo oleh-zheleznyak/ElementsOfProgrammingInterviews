@@ -9,17 +9,19 @@ namespace Problems.Chapter11_Heaps
     {
         private T[] storage;
         private int elementCount;
-        private IComparer<T> comparer = Comparer<T>.Default;
+        private IComparer<T> comparer;
 
-        public MaxHeap()
+        public MaxHeap(ushort storageSize = 1, IComparer<T>? comparer = null)
         {
-            storage = new T[1];
+            storage = new T[storageSize];
             elementCount = 0;
+            this.comparer = comparer ?? Comparer<T>.Default;
         }
 
         public MaxHeap(T[] array)
         {
             if (array == null) throw new ArgumentNullException(nameof(array));
+            comparer = Comparer<T>.Default;
 
             storage = new T[array.Length];
             Array.Copy(array, storage, array.Length);

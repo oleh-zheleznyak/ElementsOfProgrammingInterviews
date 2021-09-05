@@ -24,8 +24,18 @@ namespace Problems.Tests.Chapter11_Heaps
         {
             yield return new object[]
             {
-                new int[][] { new int[] { 1, 3 }, new int[] { 2, 4 } },
+                new int[][] { new int[] { 4,3,2,1 } },
                 new int[] { 4,3,2,1 }
+            };
+            yield return new object[]
+            {
+                new int[][] { new int[] { 3,1 }, new int[] { 4,2 } },
+                new int[] { 4,3,2,1 }
+            };
+            yield return new object[]
+            {
+                new int[][] { new int[] { 1 }, new int[] { 2 }, new int[] { 3 } },
+                new int[] { 3,2,1 }
             };
         }
     }
