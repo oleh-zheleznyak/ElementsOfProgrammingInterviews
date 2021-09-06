@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Problems.Chapter12_Searching
 {
@@ -22,14 +19,14 @@ namespace Problems.Chapter12_Searching
 
             var index = Array.BinarySearch<T>(sortedArray, valueToFind, comparer);
 
-            var firstOccurrence = index - 1;
-            while (
-                firstOccurrence >= 0 &&
-                comparer.Compare(sortedArray[firstOccurrence], sortedArray[index]) == 0)
+            var previous = index;
+            var firstIndex = index;
+            while (firstIndex >= 0)
             {
-                firstOccurrence--;
+                previous = firstIndex;
+                firstIndex = Array.BinarySearch<T>(sortedArray, 0, firstIndex, valueToFind, comparer);
             }
-            return firstOccurrence + 1;
+            return previous;
         }
     }
 }
