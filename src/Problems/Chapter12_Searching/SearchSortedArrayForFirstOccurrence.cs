@@ -17,16 +17,30 @@ namespace Problems.Chapter12_Searching
         {
             if (sortedArray == null) throw new ArgumentNullException(nameof(sortedArray));
 
-            var index = Array.BinarySearch<T>(sortedArray, valueToFind, comparer);
+            var low = 0;
+            var high = sortedArray.Length - 1;
+            var result = -1;
 
-            var previous = index;
-            var firstIndex = index;
-            while (firstIndex >= 0)
+            while (low <= high)
             {
-                previous = firstIndex;
-                firstIndex = Array.BinarySearch<T>(sortedArray, 0, firstIndex, valueToFind, comparer);
+                var mid = low + (high - low) / 2;
+                var comparison = comparer.Compare(sortedArray[mid], valueToFind);
+
+                if (comparison < 0)
+                {
+                    low = mid + 1;
+                }
+                else if (comparison > 0)
+                {
+                    high = mid - 1;
+                }
+                else
+                {
+                    high = mid - 1;
+                    result = mid;
+                }
             }
-            return previous;
+            return result;
         }
     }
 }
