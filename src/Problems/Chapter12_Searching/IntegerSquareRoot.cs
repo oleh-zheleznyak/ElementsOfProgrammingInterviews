@@ -28,7 +28,7 @@ namespace Problems.Chapter12_Searching
                 else if (sq > value) hi = mid - 1;
                 else lo = mid + 1;
             }
-            return lo * lo < value ? lo : hi;
+            return lo-1;
         }
     }
 }
