@@ -13,35 +13,34 @@ namespace Problems.Chapter12_Searching
     public class FindKthLargestElement<T>
         where T : IComparable<T>
     {
-        private Random random = new Random();
-        private IComparer<T> comparer = Comparer<T>.Default;
-        public T findKthLargestElement(int k, T[] input) // 123
+        private readonly Random random = new();
+        private readonly IComparer<T> comparer = Comparer<T>.Default;
+        public T findKthLargestElement(int k, T[] input)
         {
             if (input is null) throw new ArgumentNullException(nameof(input));
             if (k < 1) throw new ArgumentException("k has to be > 1");
             if (input.Length < k) throw new ArgumentException("k has to be smaller then the size of input array");
 
-            var left = 0; //0
-            var right = input.Length - 1; //2
-            var newIndex = -1;
+            var left = 0;
+            var right = input.Length - 1;
             while (left < right)
             {
-                var randomIndex = random.Next(left, right + 1); // 1
-                newIndex = Partition(randomIndex, left, right, input);
+                var randomIndex = random.Next(left, right + 1);
+                var newIndex = Partition(randomIndex, left, right, input);
                 if (newIndex == k - 1) return input[k - 1];
                 if (newIndex < k - 1)
                     left = newIndex + 1;
                 else
                     right = newIndex-1;
             }
-            return input[left]; // verify
+            return input[left];
         }
 
         private int Partition(int randomIndex, int left, int right, T[] input)
         {
-            var partitionValue = input[randomIndex]; //2
+            var partitionValue = input[randomIndex];
             var newIndex = left;
-            input.Swap(randomIndex,right); // 132
+            input.Swap(randomIndex,right);
 
             for (var i = left; i <= right; i++)
             {
