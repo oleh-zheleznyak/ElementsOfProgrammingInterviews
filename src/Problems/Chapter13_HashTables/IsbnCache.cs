@@ -30,16 +30,14 @@ namespace Problems.Chapter13_HashTables
         
         public void InsertPrice(string isbn, double price)
         {
-            var isbnRecord = new IsbnRecord(isbn, price);
-            
             if (isbnPrices.TryGetValue(isbn, out var node))
             {
                 linkedList.Remove(node);
                 linkedList.AddFirst(node);
-                node.Value = isbnRecord;
             }
             else
             {
+                var isbnRecord = new IsbnRecord(isbn, price);
                 var newNode = linkedList.AddFirst(isbnRecord);
                 isbnPrices[isbn] = newNode;
             }
