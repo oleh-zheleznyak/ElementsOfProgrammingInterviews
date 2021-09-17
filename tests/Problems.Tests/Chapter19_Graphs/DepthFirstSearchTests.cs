@@ -5,16 +5,16 @@ using Xunit;
 
 namespace Problems.Tests.Chapter19_Graphs
 {
-    public class BreadthFirstSearchTests: GraphSearchTests
+    public class DepthFirstSearchTests : GraphSearchTests
     {
-        private BreadthFirstSearch<string> bfs = new();
+        private DepthFirstSearch<string> dfs = new();
 
         [Fact]
         public void SearchLinkedListShapedGraphTest()
         {
             var graph = LinkedListShapedGraph();
             var (a, b, c) = FindByValue(("a", "b", "c"), graph);
-            bfs.Process(graph, a);
+            dfs.Process(graph, a);
 
             Assert.All(graph.Vertices, v => Assert.Equal(Color.Black, v.Color));
             Assert.Equal((uint) 1, b.Distance);
@@ -28,7 +28,7 @@ namespace Problems.Tests.Chapter19_Graphs
         {
             var graph = TreeShapedGraph();
             var (a, b, c) = FindByValue(("a", "b", "c"), graph);
-            bfs.Process(graph, a);
+            dfs.Process(graph, a);
 
             Assert.All(graph.Vertices, v => Assert.Equal(Color.Black, v.Color));
             Assert.Equal((uint) 1, b.Distance);
@@ -42,13 +42,14 @@ namespace Problems.Tests.Chapter19_Graphs
         {
             var graph = CircularGraph();
             var (a, b, c) = FindByValue(("a", "b", "c"), graph);
-            bfs.Process(graph, a);
+            dfs.Process(graph, a);
 
             Assert.All(graph.Vertices, v => Assert.Equal(Color.Black, v.Color));
             Assert.Equal((uint) 1, b.Distance);
             Assert.Equal(a,b.Predescessor);
-            Assert.Equal((uint) 1, c.Distance);
-            Assert.Equal(a,c.Predescessor);
+            Assert.Equal((uint) 2, c.Distance);
+            Assert.Equal(b,c.Predescessor);
         }
+
     }
 }

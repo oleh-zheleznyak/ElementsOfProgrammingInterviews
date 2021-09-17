@@ -49,6 +49,20 @@ namespace Problems.Chapter19_Graphs
             vertexToAdjacentVerticesMap.TryGetValue(vertice, out var adjacencyList);
             return adjacencyList;
         }
+        
+        /// <summary>
+        /// Note: this method should not be here - will be moved to search code (or search code moved to this class)
+        /// State needs to be set on a helper data structure / object, not in the vertices themselves
+        /// </summary>
+        public void ResetStateForSearch()
+        {
+            foreach (var vertice in this.Vertices)
+            {
+                vertice.Color = Color.White;
+                vertice.Distance = uint.MaxValue;
+                vertice.Predescessor = default;
+            }
+        }
 
         private readonly Dictionary<Vertice<T>, List<Vertice<T>>> vertexToAdjacentVerticesMap;
 

@@ -11,7 +11,7 @@ namespace Problems.Chapter19_Graphs
             if (graph is null) throw new ArgumentNullException(nameof(graph));
             if (startVertice is null) throw new ArgumentNullException(nameof(startVertice));
 
-            Initialize(graph);
+            graph.ResetStateForSearch();
 
             var queue = new Queue<Vertice<T>>();
             queue.Enqueue(startVertice);
@@ -28,20 +28,12 @@ namespace Problems.Chapter19_Graphs
                     {
                         adjacentVertex.Distance = vertex.Distance + 1;
                         adjacentVertex.Color = Color.Gray;
+                        adjacentVertex.Predescessor = vertex;
                         queue.Enqueue(adjacentVertex);
                     }
                 }
 
                 vertex.Color = Color.Black;
-            }
-        }
-
-        private void Initialize(UndirectedGraph<T> graph)
-        {
-            foreach (var vertice in graph.Vertices)
-            {
-                vertice.Color = Color.White;
-                vertice.Distance = uint.MaxValue;
             }
         }
     }

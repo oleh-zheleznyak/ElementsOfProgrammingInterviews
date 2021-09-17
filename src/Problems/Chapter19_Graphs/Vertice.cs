@@ -7,6 +7,8 @@ namespace Problems.Chapter19_Graphs
         where T : IEquatable<T>
     {
         public Vertice(T value) => Value = value;
+        
+        public Vertice<T>? Predescessor { get; set; }
 
         public T Value { get; }
         public Color Color { get; set; }
