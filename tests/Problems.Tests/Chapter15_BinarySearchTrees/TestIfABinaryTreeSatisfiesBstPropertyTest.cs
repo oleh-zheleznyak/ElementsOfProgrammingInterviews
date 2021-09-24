@@ -17,6 +17,14 @@ namespace Problems.Tests.Chapter15_BinarySearchTrees
             Assert.Equal(expectedIsBinary, actual);
         }
 
+        [Theory]
+        [MemberData(nameof(TestData))]
+        public void IsABst_ViaInorderTraversalTest(BinaryTree<int> binaryTree, bool expectedIsBinary)
+        {
+            var actual = testForBst.IsABst_ViaInorderTraversal(binaryTree);
+            Assert.Equal(expectedIsBinary, actual);
+        }
+
         public static IEnumerable<object[]> TestData()
         {
             yield return PerfectTwoLevelBst();
@@ -24,6 +32,7 @@ namespace Problems.Tests.Chapter15_BinarySearchTrees
             yield return PerfectTwoLevelNotABst();
             yield return PerfectTwoLevelAllEqual();
             yield return ThreeLevelBst();
+            yield return BstAtEachNodeButNotBstOverall();
         }
 
         private static object[] PerfectTwoLevelBst() =>
@@ -77,6 +86,25 @@ namespace Problems.Tests.Chapter15_BinarySearchTrees
                     }
                 },
                 true
+            };
+
+        private static object[] BstAtEachNodeButNotBstOverall() =>
+            new object[]
+            {
+                new BinaryTree<int>(7)
+                {
+                    Left = new BinaryTree<int>(3)
+                    {
+                        Left = new BinaryTree<int>(1),
+                        Right = new BinaryTree<int>(8)
+                    },
+                    Right = new BinaryTree<int>(9)
+                    {
+                        Left = new BinaryTree<int>(2),
+                        Right = new BinaryTree<int>(10)
+                    }
+                },
+                false
             };
     }
 }

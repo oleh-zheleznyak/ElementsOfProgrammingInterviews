@@ -14,30 +14,45 @@ namespace Problems.Chapter15_BinarySearchTrees
             this.comparer = comparer ?? Comparer<T>.Default;
         }
 
+        public bool IsABst_ViaInorderTraversal(BinaryTree<T> binaryTree)
+        {
+            if (binaryTree is null) throw new ArgumentNullException(nameof(binaryTree));
+
+            T prev = default; // this can be value type, with a "valid" default value, like 0 for int
+            bool hasPrevious = false;
+            foreach (var node in binaryTree.Inorder())
+            {
+                if (hasPrevious)
+                {
+                    var comparison = comparer.Compare(prev, node);
+                    if (comparison > 0) return false;
+                }
+                prev = node;
+                hasPrevious = true;
+            }
+
+            return true;
+        }
+
         public bool IsABst(BinaryTree<T> binaryTree)
         {
             if (binaryTree is null) throw new ArgumentNullException(nameof(binaryTree));
 
-            return NodeSatisfiesBstPropertyRecursive(binaryTree);
+            return NodeSatisfiesBstPropertyRecursive(binaryTree, default, default); // subtle bug for tree of numbers with zero
         }
 
 
-        private bool NodeSatisfiesBstPropertyRecursive(BinaryTree<T> binaryTree)
+        private bool NodeSatisfiesBstPropertyRecursive(BinaryTree<T> binaryTree, T? min, T? max)
         {
-            var satisfiesBstAtThisLevel = NodeSatisfiesBstProperty(binaryTree);
+            var valueMoreThanMinimum = comparer.Compare(min, default) == 0 ? true : comparer.Compare(binaryTree.Value, min) >= 0;
+            var valueLessThanMaximum = comparer.Compare(max, default) == 0 ? true : comparer.Compare(binaryTree.Value, max) <= 0;
 
-            if (!satisfiesBstAtThisLevel) return false;
+            if (!valueLessThanMaximum || !valueMoreThanMinimum) return false;
 
-            var satisfiesBstRecursively =
-                satisfiesBstAtThisLevel &&
-                binaryTree.Left is null ? true : NodeSatisfiesBstPropertyRecursive(binaryTree.Left) &&
-                binaryTree.Right is null ? true : NodeSatisfiesBstPropertyRecursive(binaryTree.Right);
+            var leftSubtreeIsBst = binaryTree.Left is null ? true : NodeSatisfiesBstPropertyRecursive(binaryTree.Left, min, binaryTree.Value);
+            var rightSubtreeIsBst = binaryTree.Right is null ? true : NodeSatisfiesBstPropertyRecursive(binaryTree.Right, binaryTree.Value, max);
 
-            return satisfiesBstRecursively;
+            return leftSubtreeIsBst && rightSubtreeIsBst;
         }
-
-        private bool NodeSatisfiesBstProperty(BinaryTree<T> node) =>
-            node.Left is null ? true : comparer.Compare(node.Left.Value, node.Value) <= 0 &&
-            node.Right is null ? true : comparer.Compare(node.Right.Value, node.Value) >= 0;
     }
 }
