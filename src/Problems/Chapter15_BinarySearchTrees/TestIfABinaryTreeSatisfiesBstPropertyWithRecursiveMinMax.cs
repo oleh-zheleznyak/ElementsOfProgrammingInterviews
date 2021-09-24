@@ -24,13 +24,15 @@ namespace Problems.Chapter15_BinarySearchTrees
 
         private bool NodeSatisfiesBstPropertyRecursive(BinaryTree<T> binaryTree, T? min, T? max)
         {
+            if (binaryTree is null) return true;
+
             var valueMoreThanMinimum = comparer.Compare(min, default) == 0 ? true : comparer.Compare(binaryTree.Value, min) >= 0;
             var valueLessThanMaximum = comparer.Compare(max, default) == 0 ? true : comparer.Compare(binaryTree.Value, max) <= 0;
 
             if (!valueLessThanMaximum || !valueMoreThanMinimum) return false;
 
-            var leftSubtreeIsBst = binaryTree.Left is null ? true : NodeSatisfiesBstPropertyRecursive(binaryTree.Left, min, binaryTree.Value);
-            var rightSubtreeIsBst = binaryTree.Right is null ? true : NodeSatisfiesBstPropertyRecursive(binaryTree.Right, binaryTree.Value, max);
+            var leftSubtreeIsBst = NodeSatisfiesBstPropertyRecursive(binaryTree.Left, min, binaryTree.Value);
+            var rightSubtreeIsBst = NodeSatisfiesBstPropertyRecursive(binaryTree.Right, binaryTree.Value, max);
 
             return leftSubtreeIsBst && rightSubtreeIsBst;
         }
