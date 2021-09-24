@@ -4,34 +4,14 @@ using System.Collections.Generic;
 
 namespace Problems.Chapter15_BinarySearchTrees
 {
-    public class TestIfABinaryTreeSatisfiesBstProperty<T>
+    public class TestIfABinaryTreeSatisfiesBstPropertyWithRecursiveMinMax<T> : ITestIfABinaryTreeSatisfiesBstProperty<T>
         where T : IComparable<T>
     {
         private readonly IComparer<T> comparer;
 
-        public TestIfABinaryTreeSatisfiesBstProperty(IComparer<T>? comparer = null)
+        public TestIfABinaryTreeSatisfiesBstPropertyWithRecursiveMinMax(IComparer<T>? comparer = null)
         {
             this.comparer = comparer ?? Comparer<T>.Default;
-        }
-
-        public bool IsABst_ViaInorderTraversal(BinaryTree<T> binaryTree)
-        {
-            if (binaryTree is null) throw new ArgumentNullException(nameof(binaryTree));
-
-            T prev = default; // this can be value type, with a "valid" default value, like 0 for int
-            bool hasPrevious = false;
-            foreach (var node in binaryTree.Inorder())
-            {
-                if (hasPrevious)
-                {
-                    var comparison = comparer.Compare(prev, node);
-                    if (comparison > 0) return false;
-                }
-                prev = node;
-                hasPrevious = true;
-            }
-
-            return true;
         }
 
         public bool IsABst(BinaryTree<T> binaryTree)

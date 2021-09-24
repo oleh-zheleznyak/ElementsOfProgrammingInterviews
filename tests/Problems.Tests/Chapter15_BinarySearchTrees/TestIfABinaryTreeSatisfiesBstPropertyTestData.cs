@@ -1,30 +1,13 @@
 ﻿using Problems.Chapter_10_BinaryTree;
 using Problems.Chapter15_BinarySearchTrees;
+using System.Collections;
 using System.Collections.Generic;
 using Xunit;
 
 namespace Problems.Tests.Chapter15_BinarySearchTrees
 {
-    public class TestIfABinaryTreeSatisfiesBstPropertyTest
+    public class TestIfABinaryTreeSatisfiesBstPropertyTestData : IEnumerable<object[]>
     {
-        private readonly TestIfABinaryTreeSatisfiesBstProperty<int> testForBst = new();
-
-        [Theory]
-        [MemberData(nameof(TestData))]
-        public void IsABstTest(BinaryTree<int> binaryTree, bool expectedIsBinary)
-        {
-            var actual = testForBst.IsABst(binaryTree);
-            Assert.Equal(expectedIsBinary, actual);
-        }
-
-        [Theory]
-        [MemberData(nameof(TestData))]
-        public void IsABst_ViaInorderTraversalTest(BinaryTree<int> binaryTree, bool expectedIsBinary)
-        {
-            var actual = testForBst.IsABst_ViaInorderTraversal(binaryTree);
-            Assert.Equal(expectedIsBinary, actual);
-        }
-
         public static IEnumerable<object[]> TestData()
         {
             yield return PerfectTwoLevelBst();
@@ -106,5 +89,9 @@ namespace Problems.Tests.Chapter15_BinarySearchTrees
                 },
                 false
             };
+
+        public IEnumerator<object[]> GetEnumerator() => TestData().GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
     }
 }
