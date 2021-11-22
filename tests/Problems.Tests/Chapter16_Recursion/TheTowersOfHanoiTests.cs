@@ -27,6 +27,9 @@ namespace Problems.Tests.Chapter16_Recursion
             yield return new object[] { new int[] { 1 } };
             yield return new object[] { new int[] { 1, 2 } };
             yield return new object[] { new int[] { 1, 2, 3 } };
+            yield return new object[] { new int[] { 1, 2, 3, 4 } };
+            yield return new object[] { new int[] { 1, 2, 3, 4, 5 } };
+            yield return new object[] { new int[] { 1, 2, 3, 4, 5, 6 } };
         }
     }
 }

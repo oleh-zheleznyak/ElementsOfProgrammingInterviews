@@ -13,19 +13,19 @@ namespace Problems.Chapter16_Recursion
             Helper = 2,
         }
 
-        private const byte numberOfPegs = 3;
+        private const byte NumberOfPegs = 3;
         private readonly IReadOnlyCollection<int> ringsForFirstPeg;
         private readonly Stack<int>[] pegs;
 
         public TheTowersOfHanoi(IReadOnlyCollection<int> ringsForFirstPeg)
         {
-            if (numberOfPegs < 2) throw new ArgumentException("number of pegs is less than two", nameof(numberOfPegs));
-
-            this.pegs = new Stack<int>[numberOfPegs];
-            this.ringsForFirstPeg = InitializePegs(numberOfPegs, ringsForFirstPeg);
+            this.pegs = new Stack<int>[NumberOfPegs];
+            this.ringsForFirstPeg = InitializePegs(NumberOfPegs, ringsForFirstPeg);
         }
 
         public IReadOnlyCollection<int> GetPeg(Peg peg) => pegs[(int)peg];
+
+        private Stack<int> this[Peg peg] => this.pegs[(int) peg];
 
         private IReadOnlyCollection<int> InitializePegs(byte numberOfPegs, IReadOnlyCollection<int> ringsForFirstPeg)
         {
@@ -46,15 +46,19 @@ namespace Problems.Chapter16_Recursion
 
         private void MoveSingleRing(int ringSize, Peg sourcePeg, Peg destinationPeg)
         {
-            var helperPeg = Enum.GetValues<Peg>().Where(x => x != sourcePeg && x != destinationPeg).Single();
-            //MoveRingsOfSizeAndSmaller(ringSize - 1, sourcePeg, helperPeg);
-            MoveRingsOfSizeAndSmaller(ringSize - 1, destinationPeg, helperPeg);
+            var sourceRing = this[sourcePeg].Peek();
+            var canMoveToDestination = this[destinationPeg].Count == 0 || this[destinationPeg].Peek() >= ringSize;
+            if (sourceRing != ringSize || !canMoveToDestination)
+            {
+                var helperPeg = Enum.GetValues<Peg>().Where(x => x != sourcePeg && x != destinationPeg).Single();
+                //MoveRingsOfSizeAndSmaller(ringSize - 1, sourcePeg, helperPeg);
+                MoveRingsOfSizeAndSmaller(ringSize - 1, destinationPeg, helperPeg);
+            }
 
             var ring = Take(sourcePeg);
             if (ring != ringSize) throw new InvalidOperationException("unexpected ring size");
 
             Emplace(ring, destinationPeg); // how do we know we can do this????
-
         }
 
         private void MoveRingsOfSizeAndSmaller(int ringSize, Peg sourcePeg, Peg destinationPeg)
