@@ -5,91 +5,39 @@ namespace Problems.Chapter16_Recursion
 {
     public class NonAttackingPlacementsOfNQueens
     {
-        private static bool[][,] empty = Array.Empty<bool[,]>();
-
-        private static bool[][,] single = new[]
+        public IReadOnlyCollection<IEnumerable<ushort>> CalculatePlacementsFor(ushort n)
         {
-            new bool[1, 1]
-            {
-                {true},
-            }
-        };
+            var result = new List<IEnumerable<ushort>>();
 
-        public bool[][,] CalculatePlacementsFor(ushort n)
-        {
-            if (n == 0) return empty;
-            if (n == 1) return single;
+            PlacementForRow(n, 0, new List<ushort>(), result);
 
-            var placementsForSmallerN = CalculatePlacementsFor((ushort) (n - 1));
-            if (placementsForSmallerN.Length == 0) return empty; // is this possible?
-            var placementsForN = new List<bool[,]>();
-            
-            foreach (var combination in placementsForSmallerN)
-            {
-                // TODO: refactor - do not mutate array, return arrays instead??
-                DiagonalPlacements(combination, placementsForN);
-
-                // TODO: Refactor - take n from combination?
-                RowPlacements(n, combination, placementsForN);
-
-                ColumnPlacements(n, combination, placementsForN);
-            }
-
-            return placementsForN.ToArray(); // todo: can we avoid copy?
+            return result;
         }
 
-        private void RowPlacements(ushort n, bool[,] combination, List<bool[,]>? placementsForN)
+        private void PlacementForRow(ushort n, ushort row, IList<ushort> currentPlacement, ICollection<IEnumerable<ushort>> result)
         {
-            for (int i = 0; i < n; i++)
+            if (row == n)
             {
-                if (!HasAQueenInRow(i, combination))
-                {
-                    var bigger = WrapInBiggerArray(combination);
-                    bigger[1 + i, 0] = true;
-                    placementsForN.Add(bigger);
-                }
+                result.Add(currentPlacement);
+                return;
+            }
+            for (ushort col = 0; col < n; ++col)
+            {
+                currentPlacement.Add(col);
+                if (IsValid(currentPlacement)) PlacementForRow(n, row++, currentPlacement, result);
+                currentPlacement.RemoveAt(currentPlacement.Count - 1);
             }
         }
 
-        private void ColumnPlacements(ushort n, bool[,] combination, List<bool[,]>? placementsForN)
+        private bool IsValid(IList<ushort> placement)
         {
-            // TODO: similar to row
-        }
-
-        private void DiagonalPlacements(bool[,] combination, List<bool[,]>? placementsForN)
-        {
-            if (!HasAQueenOnDiagonal(combination))
+            var rowIndex = placement.Count - 1;
+            for (int i = 0; i < rowIndex; ++i)
             {
-                var bigger = WrapInBiggerArray(combination);
-                bigger[0, 0] = true;
-                placementsForN.Add(bigger);
+                var diff = Math.Abs(placement[i] - placement[rowIndex]);
+                if (diff == 0 || diff == rowIndex - i) return false;
             }
-        }
-
-        private bool[,] WrapInBiggerArray(bool[,] array)
-        {
-            return array; // resize to n+1 on both dimensions
-        }
-
-        private bool HasAQueenInRow(int rowIndex, bool[,] board)
-        {
-            for (int i = 0; i < board.GetLength(1); i++)
-                if (board[rowIndex, i]) return true;
-            return false;
-        }
-        
-        private bool HasAQueenInColumn(int columnIndex, bool[,] board)
-        {
-            for (int i = 0; i < board.GetLength(0); i++)
-                if (board[i, columnIndex]) return true;
-            return false;
-        }
-        
-        private bool HasAQueenOnDiagonal(bool[,] board)
-        {
-            for (int i = 0; i < board.GetLength(0); i++)
-                if (board[i, i]) return true;
-            return false;
+            return true;
         }
     }
 }
