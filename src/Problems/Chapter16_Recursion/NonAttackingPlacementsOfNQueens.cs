@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Problems.Chapter16_Recursion
 {
@@ -18,13 +19,13 @@ namespace Problems.Chapter16_Recursion
         {
             if (row == n)
             {
-                result.Add(currentPlacement);
+                result.Add(currentPlacement.ToArray());
                 return;
             }
-            for (ushort col = 0; col < n; ++col)
+            for (ushort col = 0; col < n; col++)
             {
                 currentPlacement.Add(col);
-                if (IsValid(currentPlacement)) PlacementForRow(n, row++, currentPlacement, result);
+                if (IsValid(currentPlacement)) PlacementForRow(n, (ushort)(row + 1), currentPlacement, result);
                 currentPlacement.RemoveAt(currentPlacement.Count - 1);
             }
         }
