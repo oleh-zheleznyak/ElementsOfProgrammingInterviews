@@ -8,15 +8,30 @@ namespace Problems.Tests.Chapter16_Recursion
 {
     public class GeneratePermutationsTests
     {
-        GeneratePermutations<int> sut = new();
+        GeneratePermutations sut = new();
 
         [Theory]
         [MemberData(nameof(TestData))]
-        public void AllPermutationsOfTest(int[] input, IEnumerable<int[]> expected)
+        public void AllPermutationsViaSetReductionTest(int[] input, IEnumerable<int[]> expected)
         {
             var set = new HashSet<int>(input);
-            var actual = sut.AllPermutationsOf(set);
-            Assert.Equal(expected, actual);
+            var actual = sut.AllPermutationsViaSetReduction(set);
+            AssertEquivalent(expected, actual);
+        }
+
+        [Theory]
+        [MemberData(nameof(TestData))]
+        public void AllPermutationsViaAllocatedPositions(int[] input, IEnumerable<int[]> expected)
+        {
+            var actual = sut.AllPermutationsViaAllocatedPositions(input);
+            AssertEquivalent(expected, actual);
+
+        }
+
+        private void AssertEquivalent<T>(IEnumerable<T> expected, IEnumerable<T> actual)
+        {
+            Assert.All(expected, e => Assert.Contains(e, actual));
+            Assert.All(actual, a => Assert.Contains(a, expected));
         }
 
         public static IEnumerable<object[]> TestData()
