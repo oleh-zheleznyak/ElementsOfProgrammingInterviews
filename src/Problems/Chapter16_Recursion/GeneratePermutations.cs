@@ -25,7 +25,7 @@ namespace Problems.Chapter16_Recursion
             if (array.Length == 1) return Enumerable.Repeat(array.ToArray(), 1);
 
             var result = new List<T[]>();
-            AllPermutationsViaAllocatedPositions(array, new T?[array.Length], 0, result);
+            AllPermutationsViaAllocatedPositions(array, 0, result);
             return result;
         }
 
@@ -56,25 +56,28 @@ namespace Problems.Chapter16_Recursion
         /// - Time:     n*n*...n = n^n
         /// - Space:    n*(n-1)*(n-2)*...1 = n!
         /// </summary>
-        private void AllPermutationsViaAllocatedPositions<T>(T[] input, T?[] permutation, int size, ICollection<T[]> results)
-            where T: struct
+        private void AllPermutationsViaAllocatedPositions<T>(T[] input, int size, ICollection<T[]> results)
+            where T : struct
         {
             if (size == input.Length)
             {
-                results.Add(permutation.Select(x => x!.Value).ToArray());
+                results.Add(input.ToArray());
                 return;
             }
 
-            var element = input[size];
-            for (int i = 0; i < permutation.Length; i++)
+            for (int i = size; i < input.Length; i++)
             {
-                if (!permutation[i].HasValue)
-                {
-                    var newPermutation = permutation.ToArray(); // copy
-                    newPermutation[i] = element;
-                    AllPermutationsViaAllocatedPositions(input, newPermutation, size + 1, results);
-                }
+                Swap(input, size, i);
+                AllPermutationsViaAllocatedPositions(input, size + 1, results);
+                Swap(input, size, i);
             }
+        }
+
+        private static void Swap<T>(T[] input, int i, int j)
+        {
+            var temp = input[i];
+            input[i] = input[j];
+            input[j] = temp;
         }
     }
 }
