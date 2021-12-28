@@ -4,6 +4,9 @@ using System.Linq;
 
 namespace Problems.Chapter16_Recursion
 {
+    /// <assumptions>
+    /// There are no duplicates in the array
+    /// </assumptions>
     public class GeneratePermutations
     {
         public IEnumerable<T[]> AllPermutationsViaSetReduction<T>(ISet<T> array)
@@ -28,11 +31,6 @@ namespace Problems.Chapter16_Recursion
             return result;
         }
 
-        /// <summary>
-        /// Complexity
-        /// - Time:     n*(n-1)*(n-2)*...1 = n!
-        /// - Space:    n*(n-1)*(n-2)*...1 = n!
-        /// </summary>
         private void AllPermutationsViaSetReduction<T>(ISet<T> set, T[] permutation, int size, ICollection<T[]> results)
         {
             if (set.Count == 0)
@@ -52,7 +50,8 @@ namespace Problems.Chapter16_Recursion
 
         /// <summary>
         /// Complexity
-        /// - Time:     n*n*...n = n^n
+        /// - Number of calls:     Recurrence: C(n) = n*C(n-1) ~ O(n!)
+        /// - Time: O(n*n!) = number of recursive calls * loop in each call
         /// - Space:    n*(n-1)*(n-2)*...1 = n!
         /// </summary>
         private void AllPermutationsViaAllocatedPositions<T>(T[] input, int size, ICollection<T[]> results)
