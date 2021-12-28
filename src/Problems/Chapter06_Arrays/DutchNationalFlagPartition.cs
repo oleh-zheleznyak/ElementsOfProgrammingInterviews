@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Problems.Chapter06_Arrays
 {
@@ -22,7 +21,7 @@ namespace Problems.Chapter06_Arrays
             var smaller = 0;
             var greater = data.Length - 1;
 
-            Swap(data, smaller, pivotIndex);
+            data.Swap(smaller, pivotIndex);
 
             var i = 1;
             while (i <= greater)
@@ -30,13 +29,13 @@ namespace Problems.Chapter06_Arrays
                 var compared = comparer.Compare(data[i], pivot);
                 if (compared < 0) // data[i] < pivot
                 {
-                    Swap(data, smaller, i);
+                    data.Swap(smaller, i);
                     smaller++;
                     i++;
                 }
                 else if (compared > 0) // data[i] > pivot
                 {
-                    Swap(data, greater, i);
+                    data.Swap(greater, i);
                     greater--;
                 }
                 else // data[i] == pivot
@@ -45,13 +44,6 @@ namespace Problems.Chapter06_Arrays
                 }
             }
 
-        }
-
-        private void Swap<T>(T[] data, int i, int j)
-        {
-            var value = data[i];
-            data[i] = data[j];
-            data[j] = value;
         }
     }
 }

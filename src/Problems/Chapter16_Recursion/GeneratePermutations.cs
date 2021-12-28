@@ -18,7 +18,6 @@ namespace Problems.Chapter16_Recursion
         }
 
         public IEnumerable<T[]> AllPermutationsViaAllocatedPositions<T>(T[] array)
-            where T : struct
         {
             if (array is null) throw new ArgumentNullException(nameof(array));
             if (array.Length == 0) return Enumerable.Empty<T[]>();
@@ -57,7 +56,6 @@ namespace Problems.Chapter16_Recursion
         /// - Space:    n*(n-1)*(n-2)*...1 = n!
         /// </summary>
         private void AllPermutationsViaAllocatedPositions<T>(T[] input, int size, ICollection<T[]> results)
-            where T : struct
         {
             if (size == input.Length)
             {
@@ -67,17 +65,10 @@ namespace Problems.Chapter16_Recursion
 
             for (int i = size; i < input.Length; i++)
             {
-                Swap(input, size, i);
+                input.Swap(size, i);
                 AllPermutationsViaAllocatedPositions(input, size + 1, results);
-                Swap(input, size, i);
+                input.Swap(size, i);
             }
-        }
-
-        private static void Swap<T>(T[] input, int i, int j)
-        {
-            var temp = input[i];
-            input[i] = input[j];
-            input[j] = temp;
         }
     }
 }
