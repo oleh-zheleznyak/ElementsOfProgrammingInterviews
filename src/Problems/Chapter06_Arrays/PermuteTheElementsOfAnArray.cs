@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Problems.Chapter06_Arrays
 {
@@ -31,23 +27,20 @@ namespace Problems.Chapter06_Arrays
 
         private void ApplyPermutationToArray(T[] array, int[] permutation)
         {
-            var counter = 0;
-            while (counter < array.Length)
+            for (var i = 0; i < array.Length; i++)
             {
-                var currentIndex = counter;
-                var newIndex = permutation[currentIndex];
-                var previousValue = array[currentIndex];
-                while (newIndex != currentIndex && newIndex >= 0)
+                var current = i;
+                while (permutation[current]>=0)
                 {
-                    var tmp = array[newIndex];
-                    array[newIndex] = previousValue;
-                    previousValue = tmp;
-                    permutation[currentIndex] = int.MinValue;
-                    currentIndex = newIndex;
-                    newIndex = permutation[newIndex];
+                    array.Swap(i, permutation[current]);
+                    var next = permutation[current];
+                    permutation[current] -= permutation.Length;
+                    current=next;
                 }
-                counter++;
             }
+
+            for (var i = 0; i < permutation.Length; i++)
+                permutation[i]+=permutation.Length; 
         }
     }
 }
