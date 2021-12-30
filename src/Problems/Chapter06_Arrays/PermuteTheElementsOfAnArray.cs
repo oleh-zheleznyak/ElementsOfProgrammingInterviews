@@ -8,9 +8,13 @@ namespace Problems.Chapter06_Arrays
     /// <remarks>
     /// "Immutable permutation", that returns a new array is more elegant and maintainable.
     /// This is the direction that most programming language libraries go ( LINQ in C#, lodash in js, etc)
+    /// </remarks>
+    /// <complexity>
     /// This implementation will shuffle array in place, to use O(1) space instead of O(N)
     /// Returning a new array is also trivial, and pointless as a programming excersise
-    /// </remarks>
+    /// Time: O(N)
+    /// Space: O(1) - however, it marks elements in permutation array
+    /// </complexity>
     public class PermuteTheElementsOfAnArray<T>
     {
         public void ApplyPermutation(T[] array, int[] permutation)
