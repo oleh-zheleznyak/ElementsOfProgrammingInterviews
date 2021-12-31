@@ -15,7 +15,7 @@ namespace Problems.Chapter06_Arrays
     /// Time: O(N)
     /// Space: O(1) - however, it marks elements in permutation array
     /// </complexity>
-    public class PermuteTheElementsOfAnArray<T>
+    public class PermuteTheElementsOfAnArray<T> : IPermuteTheElementsOfAnArray<T>
     {
         public void ApplyPermutation(T[] array, int[] permutation)
         {
@@ -34,17 +34,29 @@ namespace Problems.Chapter06_Arrays
             for (var i = 0; i < array.Length; i++)
             {
                 var current = i;
-                while (permutation[current]>=0)
+                while (permutation[current] >= 0)
                 {
                     array.Swap(i, permutation[current]);
                     var next = permutation[current];
                     permutation[current] -= permutation.Length;
-                    current=next;
+                    current = next;
                 }
             }
 
             for (var i = 0; i < permutation.Length; i++)
-                permutation[i]+=permutation.Length; 
+                permutation[i] += permutation.Length;
+        }
+
+        public T[] ApplyPermutationToNewArray(T[] array, int[] permutation)
+        {
+            if (array is null) throw new ArgumentNullException(nameof(array));
+            if (permutation is null) throw new ArgumentNullException(nameof(permutation));
+            if (array.Length != permutation.Length)
+                throw new ArgumentException($"{nameof(array)} should have the same number of elements as {nameof(permutation)}");
+
+            var result = new T[permutation.Length];
+            for (var i = 0; i < array.Length; i++) result[i] = array[permutation[i]];
+            return result;
         }
     }
 }

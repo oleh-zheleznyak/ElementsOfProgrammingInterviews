@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Problems.Chapter06_Arrays
 {
-    public class ComputeTheNextPermutation
+    public class ComputeTheNextPermutation : IComputeTheNextPermutation
     {
         public int[] NextPermutationUnderDictionaryOrdering(int[] permutation)
         {
