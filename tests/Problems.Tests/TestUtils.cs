@@ -10,5 +10,11 @@ namespace Problems.Tests
             Assert.All(expected, e => Assert.Contains(e, actual));
             Assert.All(actual, a => Assert.Contains(a, expected));
         }
+
+        public static void AssertEquivalent<T>(IEnumerable<IEnumerable<T>> expected, IEnumerable<IEnumerable<T>> actual)
+        {
+            Assert.All(expected, e => Assert.Contains(e, actual));
+            Assert.All(actual, a => Assert.Contains(a, expected));
+        }
     }
 }
