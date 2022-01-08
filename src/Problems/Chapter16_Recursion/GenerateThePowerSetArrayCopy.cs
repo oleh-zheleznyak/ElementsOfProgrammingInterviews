@@ -7,18 +7,14 @@ namespace Problems.Chapter16_Recursion
     /// <summary>
     /// 16.4 Generate the power set
     /// </summary>
-    public class GenerateThePowerSet<T>
+    public class GenerateThePowerSetArrayCopy<T>
     {
         public IReadOnlyCollection<ISet<T>> PowerSetOf(ISet<T> set)
         {
             if (set is null) throw new ArgumentNullException(nameof(set));
 
-            var setSize = set.Count;
-            var emptyWordToStartWith = new bool[setSize];
-
-            var powerSetSize = Math.Pow(2, setSize);
-            if (powerSetSize > int.MaxValue) throw new ArgumentException("Set too large, cannot compute more than int.MaxValue permutations");
-            var allNbitWords = new List<bool[]>((int)powerSetSize);
+            var allNbitWords = new List<bool[]>();
+            var emptyWordToStartWith = new bool[set.Count];
 
             AddAllPossibleNbitWordsTo(allNbitWords, emptyWordToStartWith, 0);
 
@@ -30,7 +26,7 @@ namespace Problems.Chapter16_Recursion
         private IReadOnlyCollection<ISet<T>> TranslateWordsToSets(ISet<T> set, List<bool[]> words)
         {
             var elements = set.ToArray();
-            var result = new List<ISet<T>>(words.Count);
+            var result = new List<ISet<T>>();
 
             foreach (var word in words)
             {
@@ -51,7 +47,7 @@ namespace Problems.Chapter16_Recursion
         {
             if (index == word.Length)
             {
-                results.Add(word.ToArray());
+                results.Add(word);
                 return;
             }
 
@@ -61,8 +57,9 @@ namespace Problems.Chapter16_Recursion
 
         private void AddAllPossibleNbitWordsWithIndexBitSet(ICollection<bool[]> results, bool[] wordToModify, int index, bool bitValueToSet)
         {
-            wordToModify[index] = bitValueToSet;
-            AddAllPossibleNbitWordsTo(results, wordToModify, index + 1);
+            var copyOfWord = wordToModify.ToArray();
+            copyOfWord[index] = bitValueToSet;
+            AddAllPossibleNbitWordsTo(results, copyOfWord, index + 1);
         }
     }
 }
