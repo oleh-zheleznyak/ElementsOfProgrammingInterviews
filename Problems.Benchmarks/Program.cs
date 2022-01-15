@@ -1,5 +1,4 @@
 ﻿using BenchmarkDotNet.Running;
-using System;
 
 namespace Problems.Benchmarks
 {
@@ -7,7 +6,8 @@ namespace Problems.Benchmarks
     {
         static void Main(string[] args)
         {
-            var summary = BenchmarkRunner.Run(typeof(Program).Assembly);
+            // var summary = BenchmarkRunner.Run(typeof(Program).Assembly);
+            var summary = BenchmarkRunner.Run<GeneratePowerSetBenchmark>();
 
             // uncomment this to run VS Profiler session
             // RunManualJobForProfilingSession();

@@ -4,9 +4,9 @@ using Xunit;
 
 namespace Problems.Tests.Chapter16_Recursion
 {
-    public class GenerateThePowerSetTests : GenerateThePowerSetTestsBase
+    public class GenerateThePowerSetNonRecursiveTests: GenerateThePowerSetTestsBase
     {
-        GenerateThePowerSet<int> sut = new();
+        GenerateThePowerSetNonRecursive<int> sut = new();
 
         [Theory]
         [MemberData(nameof(TestData))]
