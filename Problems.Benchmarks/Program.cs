@@ -15,9 +15,9 @@ namespace Problems.Benchmarks
 
         private static void RunManualJobForProfilingSession()
         {
-            var manualBenchmark = new GenerateThePowerSetBenchmark();
+            var manualBenchmark = new GeneratePermutationsBenchmark();
             manualBenchmark.Setup();
-            manualBenchmark.PowerSet();
+            manualBenchmark.PermutationsViaSetReduction();
         }
     }
 }
