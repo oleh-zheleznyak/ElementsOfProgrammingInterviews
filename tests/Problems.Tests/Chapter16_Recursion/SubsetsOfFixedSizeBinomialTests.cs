@@ -5,15 +5,15 @@ using Xunit;
 
 namespace Problems.Tests.Chapter16_Recursion
 {
-    public class SubsetsOfFixedSizeNonGenericTests : SubsetsOfFixedSizeTestsBase
+    public class SubsetsOfFixedSizeBinomialTests : SubsetsOfFixedSizeTestsBase
     {
-        private SubsetsOfFixedSize sut = new();
+        private SubsetsOfFixedSizeBinomial<int> sut = new();
 
         [Theory]
         [MemberData(nameof(TestData))]
         public void AllSubsetsOfSizeTest(int[] set, uint size, IReadOnlyCollection<int[]> expected)
         {
-            var actual = sut.AllSubsetsOfSize(set.Max(), (int)size);
+            var actual = sut.AllSubsetsOfSize(new HashSet<int>(set), (int)size);
             TestUtils.AssertEquivalent(expected, actual);
         }
     }
