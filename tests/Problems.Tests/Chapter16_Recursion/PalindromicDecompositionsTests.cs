@@ -1,9 +1,5 @@
 ﻿using Problems.Chapter16_Recursion;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Problems.Tests.Chapter16_Recursion
@@ -27,6 +23,7 @@ namespace Problems.Tests.Chapter16_Recursion
             yield return new object[] { "AB", new[] { new[] { "A", "B" } } };
             yield return new object[] { "AA", new[] { new[] { "A", "A" }, new[] { "AA" } } };
             yield return new object[] { "ABB", new[] { new[] { "A", "BB" }, new[] { "A", "B", "B" } } };
+            yield return new object[] { "ABBA", new[] { new[] { "A", "BB", "A" }, new[] { "A", "B", "B", "A" }, new[] { "ABBA" } } };
         }
     }
 }

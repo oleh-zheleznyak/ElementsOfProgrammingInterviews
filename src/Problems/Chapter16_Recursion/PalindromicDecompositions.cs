@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Problems.Chapter16_Recursion
 {
@@ -29,9 +27,6 @@ namespace Problems.Chapter16_Recursion
                 return;
             }
 
-            // ACCB -> {A,CC,B}, {A,C,C,B}
-            // brute - force - enumerate all decompositions
-            // check that every string inside is a palindrome
             for (int i = startIndex; i <= endIndex; i++)
             {
                 if (isPalindrome(input, startIndex, i))
