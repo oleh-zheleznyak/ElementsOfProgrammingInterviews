@@ -5,9 +5,9 @@ using Xunit;
 
 namespace Problems.Tests.Chapter16_Recursion
 {
-    public class GenerateBinaryTreesTest
+    public class GenerateBinaryTreesViaDirectedIterationTest
     {
-        GenerateBinaryTrees<int> generateBinaryTrees = new();
+        GenerateBinaryTreesViaDirectedIteration<int> generateBinaryTrees = new();
 
         [Theory]
         [MemberData(nameof(TestData))]
