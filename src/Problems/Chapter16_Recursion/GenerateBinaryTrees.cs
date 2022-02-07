@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace MockInterview.Recursion
 {
-    public class GenerateBinaryTrees<T> where T : IComparable<T>
+    public class GenerateBinaryTrees<T> : IBinaryTreeGenerator<T> where T : IComparable<T>
     {
         public IReadOnlyCollection<BinaryTree<T>> GenerateAllBinaryTrees(int numberOfNodes)
         {
@@ -19,7 +19,7 @@ namespace MockInterview.Recursion
             return results;
         }
 
-        public void GenerateAllBinaryTrees(int numberOfNodes, BinaryTree<T> root, BinaryTree<T> currentNode, int nodeCounter, ICollection<BinaryTree<T>> results)
+        private void GenerateAllBinaryTrees(int numberOfNodes, BinaryTree<T> root, BinaryTree<T> currentNode, int nodeCounter, ICollection<BinaryTree<T>> results)
         {
             if (numberOfNodes == nodeCounter) results.Add(root.Clone());
             if (numberOfNodes <= nodeCounter) return;
@@ -42,13 +42,5 @@ namespace MockInterview.Recursion
             currentNode.Left = null;
             currentNode.Right = null;
         }
-
-        // Test example  - 3 nodes -- error missed tree 3node, balanced
-        //   x    	c = 1
-        // x 	x	c = 2
-        //  x     	c = 3
-        //		c = 4
-        // Recurrence: C(n) = 4C(n-1) = ... 4^(n-1)
-        // c = 3, 4^2 = 16;
     }
 }

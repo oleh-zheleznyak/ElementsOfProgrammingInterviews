@@ -3,7 +3,8 @@ using System.Collections.Generic;
 
 namespace MockInterview.Recursion
 {
-    public class GenerateBinaryTreesViaDirectedIteration<T> where T : IComparable<T>
+    public class GenerateBinaryTreesViaDirectedIteration<T> : IBinaryTreeGenerator<T>
+        where T : IComparable<T>
     {
         public IReadOnlyCollection<BinaryTree<T>> GenerateAllBinaryTrees(int numberOfNodes)
         {
