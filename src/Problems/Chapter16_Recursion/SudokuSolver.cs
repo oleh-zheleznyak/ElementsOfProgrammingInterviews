@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Problems.Chapter16_Recursion
 {
@@ -17,6 +18,7 @@ namespace Problems.Chapter16_Recursion
             if (IsInvalid(sudoku)) throw new ArgumentException(nameof(sudoku));
 
             // what if there is no solution?
+            var permutations = GenerateAllValueRangePermutations(MinValue..MaxValue);
             EnumeratePossibleValues(sudoku, new Point(0, 0));
             if (IsInvalid(sudoku)) throw new Exception("solution not found");
         }
@@ -62,7 +64,35 @@ namespace Problems.Chapter16_Recursion
                 sudoku.GetLength(1) != MaxValue;
         }
 
+        private IReadOnlyCollection<byte[]> GenerateAllValueRangePermutations(Range range)
+        {
+            var initialSet = Enumerable.Range(range.Start.Value, range.End.Value).Cast<byte>().ToArray();
 
+            var results = new List<byte[]>();
+            var permutation = new byte[range.End.Value];
+
+            GenerateAllPermutationsOfArray(initialSet, 0, permutation, results);
+
+            return results;
+        }
+
+        private void GenerateAllPermutationsOfArray(byte[] array, int currentIndex, byte[] currentArray,
+            ICollection<byte[]> results)
+        {
+            if (currentIndex == array.Length)
+            {
+                results.Add(currentArray);
+                return;
+            }
+
+            for (int i = currentIndex; i < array.Length; i++)
+            {
+                currentArray[currentIndex] = array[i];
+                array.Swap(i,currentIndex);
+                GenerateAllPermutationsOfArray(array, currentIndex + 1, currentArray, results);
+                array.Swap(i,currentIndex);
+            }
+        }
     }
 
     public readonly struct Point : IEquatable<Point>
@@ -95,7 +125,7 @@ namespace Problems.Chapter16_Recursion
         private static byte Increment = 1;
         private static byte StartIndex = 0;
         private static byte EndIndex = 8;
-        
+
         public Point(byte row, byte column)
         {
             this.row = row;
@@ -114,7 +144,7 @@ namespace Problems.Chapter16_Recursion
             if (row < EndIndex) return new Point((byte) (row + Increment), StartIndex);
             return End;
         }
-        
+
         public bool IsEndOfLine() => this == End;
 
         public static Point End => new Point(byte.MaxValue, byte.MaxValue);
