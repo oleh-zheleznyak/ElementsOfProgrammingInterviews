@@ -1,172 +1,139 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Problems.Chapter16_Recursion
 {
     public class SudokuSolver
     {
-        public const byte MinValue = 1;
-        public const byte MaxValue = 9;
+        private const int Size = 9;
+        private const int StartIndex = 0;
+        private const int EndIndex = Size - 1;
+        private const int EmptyValue = 0;
+        private const byte MinValue = 1;
+        private const byte MaxValue = 9;
+        private const byte RegionSize = 3;
 
-        // solves the puzzle in place, if there are several solutions, picks arbitrary one
-        public void Solve(byte[,] sudoku)
+        // returns true if at least one solution for a partially filled sudoku is found
+        public bool HasSolution(byte[,] sudoku)
         {
             if (sudoku is null) throw new ArgumentNullException(nameof(sudoku));
-            if (HasWrongSize(sudoku)) throw new ArgumentException(nameof(sudoku));
-            if (HasInvalidNumbers(sudoku)) throw new ArgumentException(nameof(sudoku));
-            if (IsInvalid(sudoku)) throw new ArgumentException(nameof(sudoku));
+            Validate(sudoku);
 
-            // what if there is no solution?
-            var permutations = GenerateAllValueRangePermutations(MinValue..MaxValue);
-            EnumeratePossibleValues(sudoku, new Point(0, 0));
-            if (IsInvalid(sudoku)) throw new Exception("solution not found");
+            return HasSolution(sudoku, StartIndex, StartIndex);
         }
 
-        private void EnumeratePossibleValues(byte[,] sudoku, Point currentIndex)
+        private bool HasSolution(byte[,] sudoku, int row, int column)
         {
-            if (currentIndex.IsEndOfLine()) return;
-            if (IsFilled(sudoku, currentIndex)) currentIndex = currentIndex.Next();
+            // handle indexes - TODO: extract a separate index struct / class
+            if (row > EndIndex)
+            {
+                row = StartIndex;
+                column = column + 1;
+            }
 
+            // when to stop - sudoku is filled entirely
+            if (column == EndIndex + 1)
+                return true;
+
+            // respect for filled in values: assume empty - means zero
+            if (sudoku[row, column] != EmptyValue)
+                return HasSolution(sudoku, row + 1, column);
+
+            // How to iterate
             for (var value = MinValue; value <= MaxValue; value++)
             {
-                sudoku[currentIndex.Row, currentIndex.Column] = value;
-                EnumeratePossibleValues(sudoku, currentIndex.Next());
+                // constraint validation
+                if (IsValid(sudoku, row, column, value))
+                {
+                    sudoku[row, column] = value;
+                    if (HasSolution(sudoku, row + 1, column))
+                        return true;
+                }
             }
-        }
 
-        private bool IsFilled(byte[,] sudoku, Point currentIndex)
-        {
-            return sudoku[currentIndex.Row, currentIndex.Column] > 0;
-        }
-
-        private bool HasInvalidNumbers(byte[,] sudoku)
-        {
-            foreach (var index in Point.AllPoints())
-            {
-                var value = sudoku[index.Row, index.Column];
-                if (value < MinValue || value > MaxValue) return true;
-            }
+            // unset value
+            sudoku[row, column] = 0;
 
             return false;
+
         }
 
-        private bool IsInvalid(byte[,] sudoku)
+        private bool IsValid(byte[,] sudoku, int row, int column, byte value)
         {
-            // TODO: check uniqueness
+            return
+                IsRowContstraintValid(sudoku, row, value) &&
+                IsColumnContstraintValid(sudoku, column, value) &&
+                IsSubSectionConstraintValid(sudoku, row, column, value);
+
+        }
+
+        private bool IsRowContstraintValid(byte[,] sudoku, int row, byte value)
+        {
+            for (var i = StartIndex; i <= EndIndex; i++)
+                if (sudoku[row, i] == value)
+                    return false;
             return true;
         }
 
-        private bool HasWrongSize(byte[,] sudoku)
+        private bool IsColumnContstraintValid(byte[,] sudoku, int column, byte value)
         {
-            return
-                sudoku.GetLength(0) != MaxValue ||
-                sudoku.GetLength(1) != MaxValue;
+            for (var i = StartIndex; i <= EndIndex; i++)
+                if (sudoku[i, column] == value)
+                    return false;
+            return true;
         }
 
-        private IReadOnlyCollection<byte[]> GenerateAllValueRangePermutations(Range range)
+        private bool IsSubSectionConstraintValid(byte[,] sudoku, int row, int column, byte value)
         {
-            var initialSet = Enumerable.Range(range.Start.Value, range.End.Value).Cast<byte>().ToArray();
+            // verify that in 3x3 grid none of the numbers matches the one in row/column
+            // which grid we are in?
+            var rowSection = row  / RegionSize;
+            var columnSection = column / RegionSize;
 
-            var results = new List<byte[]>();
-            var permutation = new byte[range.End.Value];
-
-            GenerateAllPermutationsOfArray(initialSet, 0, permutation, results);
-
-            return results;
-        }
-
-        private void GenerateAllPermutationsOfArray(byte[] array, int currentIndex, byte[] currentArray,
-            ICollection<byte[]> results)
-        {
-            if (currentIndex == array.Length)
+            for (var i = 0; i < RegionSize; i++)
             {
-                results.Add(currentArray);
-                return;
+                var rowIndex = rowSection * RegionSize + i;
+                for (var j = 0; j < RegionSize; j++)
+                {
+                    var columnIndex = columnSection * RegionSize + j;
+                    var v = sudoku[rowIndex, columnIndex];
+                    if (v == value && rowIndex != row && columnIndex != column)
+                        return false;
+                }
             }
+            return true;
+        }
 
-            for (int i = currentIndex; i < array.Length; i++)
+        private void Validate(byte[,] sudoku)
+        {
+            ValidateSize(sudoku);
+            ValidateFilledNumbers(sudoku);
+            ValidateConstraints(sudoku);
+        }
+
+        private void ValidateConstraints(byte[,] sudoku)
+        {
+            // todo
+        }
+
+        private void ValidateFilledNumbers(byte[,] sudoku)
+        {
+            for (var i = StartIndex; i <= EndIndex; i++)
             {
-                currentArray[currentIndex] = array[i];
-                array.Swap(i,currentIndex);
-                GenerateAllPermutationsOfArray(array, currentIndex + 1, currentArray, results);
-                array.Swap(i,currentIndex);
-            }
-        }
-    }
-
-    public readonly struct Point : IEquatable<Point>
-    {
-        public bool Equals(Point other)
-        {
-            return row == other.row && column == other.column;
-        }
-
-        public override bool Equals(object? obj)
-        {
-            return obj is Point other && Equals(other);
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(row, column);
-        }
-
-        public static bool operator ==(Point left, Point right)
-        {
-            return left.Equals(right);
-        }
-
-        public static bool operator !=(Point left, Point right)
-        {
-            return !left.Equals(right);
-        }
-
-        private static byte Increment = 1;
-        private static byte StartIndex = 0;
-        private static byte EndIndex = 8;
-
-        public Point(byte row, byte column)
-        {
-            this.row = row;
-            this.column = column;
-        }
-
-        private readonly byte row;
-        private readonly byte column;
-
-        public byte Row => this.row;
-        public byte Column => this.column;
-
-        public Point Next()
-        {
-            if (column < EndIndex) return new Point(row, (byte) (column + Increment));
-            if (row < EndIndex) return new Point((byte) (row + Increment), StartIndex);
-            return End;
-        }
-
-        public bool IsEndOfLine() => this == End;
-
-        public static Point End => new Point(byte.MaxValue, byte.MaxValue);
-
-        public static Point Start => new Point(0, 0);
-
-        public static IEnumerable<Point> AllPoints()
-        {
-            var index = Start;
-            while (!index.IsEndOfLine())
-            {
-                yield return index;
-                index = index.Next();
+                for (var j = StartIndex; j <= EndIndex; j++)
+                {
+                    var value = sudoku[i, j];
+                    if (value != 0 && (value < MinValue || value > MaxValue))
+                        throw new ArgumentException(
+                            $"Value {value} at index (row;col)=({i};{j}) is outside of the range of allowed values of {MinValue}..{MaxValue}");
+                }
             }
         }
 
-        public static IEnumerable<Point> RowPoints(byte rowIndex)
+        private void ValidateSize(byte[,] sudoku)
         {
-            for (byte i = StartIndex; i <= EndIndex; i++)
-            {
-                yield return new Point(rowIndex, i);
-            }
+            if (sudoku.GetLength(0) != Size || sudoku.GetLength(1) != Size)
+                throw new ArgumentException("Wrong size of input array");
         }
+
     }
 }
