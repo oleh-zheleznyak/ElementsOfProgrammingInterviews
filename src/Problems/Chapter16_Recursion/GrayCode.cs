@@ -7,12 +7,12 @@ namespace Problems.Chapter16_Recursion
 
     public class GrayCode
     {
-        private static int[] zero = new int[] { 0 };
+        private static IReadOnlyCollection<int[]> zero = new[] { new int[] { 0 } };
         private const int IntBitness = 32;
 
         // TODO: perm is 0...2^n-1, byte.MaxValue = 255, int.MaxValue = 2^32-1 - potential overflow
         // repl int with long, does not help, need to use BigNumber of limit numberOfBits 
-        public int[]? Compute(byte numberOfBits)
+        public IReadOnlyCollection<int[]> Compute(byte numberOfBits)
         {
             if (numberOfBits == 0) return zero;
             if (numberOfBits > IntBitness) throw new ArgumentOutOfRangeException($"{nameof(numberOfBits)} cannot be bigger than {IntBitness}");
@@ -22,13 +22,12 @@ namespace Problems.Chapter16_Recursion
             // Check that it meets the condition
             var results = new List<int[]>();
             var size = (int)Math.Pow(2, numberOfBits);
-            var permutation = new int[size];
-            var initial = Enumerable.Range(0, size - 1).ToArray();
+            var initial = Enumerable.Range(0, size).ToArray();
+            var permutation = initial.ToArray();
 
             ComputePermutations(initial, 0, permutation, results);
 
-            // TODO: refine		
-            return results.FirstOrDefault();
+            return results;
         }
 
         private void ComputePermutations(int[] initial, int index, int[] permutation, ICollection<int[]> results)
@@ -67,10 +66,10 @@ namespace Problems.Chapter16_Recursion
             var bitmask = 1;
             var counter = 0;
 
-            while (first > 0 && second > 0)
+            while (first > 0 || second > 0)
             {
                 var firstLowest = first & bitmask;
-                var secondLowest = first & bitmask;
+                var secondLowest = second & bitmask;
                 if (firstLowest != secondLowest) counter++;
                 if (counter > 1) return false;
                 first = first >> 1;
