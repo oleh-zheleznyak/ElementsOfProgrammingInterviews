@@ -13,6 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "timeboxed-mock-interviews", "timeboxed-mock-interviews", "{6BA2667D-9C47-4E50-BAC8-EEDC1AD26AEF}"
 	ProjectSection(SolutionItems) = preProject
+		mock\ComputeAGrayCode.cs = mock\ComputeAGrayCode.cs
 		mock\GenerateBinaryTrees.cs = mock\GenerateBinaryTrees.cs
 		mock\ImplementASudokuSolver.cs = mock\ImplementASudokuSolver.cs
 		mock\SudokuSolver-SecondTry.cs = mock\SudokuSolver-SecondTry.cs
