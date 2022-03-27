@@ -16,24 +16,16 @@ namespace Problems
         public Node Root { get; }
     }
 
-    public class Diameter
-    {
-        public int PathIsolatedInSubtree { get; }
-
-        public int PathViaParent { get; }
-
-        public Diameter(int pathIsolatedInSubTree, int pathViaParent)
-        {
-            PathIsolatedInSubtree = pathIsolatedInSubTree;
-            PathViaParent = pathViaParent;
-        }
-
-        public int Max => Math.Max(PathIsolatedInSubtree, PathViaParent);
-    }
+    public readonly record struct Diameter(int PathIsolatedInSubTree, int PathViaParent);
 
     public class Node
     {
         public Node(IReadOnlyList<Edge> children)
+        {
+            Children = children; // Consider copy
+        }
+
+        public Node(params Edge[] children)
         {
             Children = children; // Consider copy
         }
@@ -44,16 +36,17 @@ namespace Problems
 
         public int Diameter()
         {
-            return CalculateDiameterRecursively().Max;
+            var diameter = CalculateDiameterRecursively();
+            return Math.Max(diameter.PathIsolatedInSubTree, diameter.PathViaParent);
         }
 
         private Diameter CalculateDiameterRecursively()
         {
             if (Children.Count == 0)
-                return new Diameter(0, 0); // cost - the node does not have it - it is now in edge
+                return new Diameter(0, 0); // TODO: cost - the node does not have it - it is now in edge
 
             var diameters = Children.Select(x => x.Root.CalculateDiameterRecursively()).ToArray();
-            var maxDiameterIsolatedInSubTree = diameters.Max(x => x.PathIsolatedInSubtree);
+            var maxDiameterIsolatedInSubTree = diameters.Max(x => x.PathIsolatedInSubTree);
             var maxDiameterViaParent = FindMaxAndIndex(out var maxIndex, diameters);
             var secondMaxDiameterViaParent = FindMaxAndIndex(out var _, diameters, maxIndex);
             var result = new Diameter(
