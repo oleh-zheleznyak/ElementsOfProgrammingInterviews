@@ -4,33 +4,14 @@ using System.Linq;
 
 namespace Problems.Chapter16_Recursion
 {
-    public class Edge
-    {
-        public Edge(int cost, Node root)
-        {
-            Cost = cost;
-            Root = root;
-        }
-
-        public int Cost { get; }
-        public Node Root { get; }
-    }
-
     public readonly record struct Diameter(int PathIsolatedInSubTree, int PathViaParent);
 
     public class Node
     {
-        public Node(IReadOnlyList<Edge> children)
-        {
-            Children = children; // Consider copy
-        }
-
         public Node(params Edge[] children)
         {
-            Children = children; // Consider copy
+            Children = children;
         }
-
-        public bool IsLeaf => Children.Count == 0;
 
         public IReadOnlyList<Edge> Children { get; }
 
@@ -63,7 +44,7 @@ namespace Problems.Chapter16_Recursion
             for (var i = 0; i < Children.Count; i++)
             {
                 if (i == skipIndex) continue;
-                var cost = diameters[i].PathViaParent + Children[i].Cost;
+                var cost = diameters[i].PathViaParent + Children[i].Length;
                 if (cost > maxDiameterViaParent)
                 {
                     maxIndex = i;
