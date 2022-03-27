@@ -43,7 +43,7 @@ namespace Problems
         private Diameter CalculateDiameterRecursively()
         {
             if (Children.Count == 0)
-                return new Diameter(0, 0); // TODO: cost - the node does not have it - it is now in edge
+                return new Diameter(0, 0);
 
             var diameters = Children.Select(x => x.Root.CalculateDiameterRecursively()).ToArray();
             var maxDiameterIsolatedInSubTree = diameters.Max(x => x.PathIsolatedInSubTree);
