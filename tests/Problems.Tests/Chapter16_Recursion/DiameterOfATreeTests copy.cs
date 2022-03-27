@@ -1,7 +1,7 @@
 using Problems.Chapter16_Recursion;
 using Xunit;
 
-namespace Problems.Tests.Chapter16_Recursion
+namespace Problems.Tests.Chapter16_Recursion.BookSolution
 {
     public class DiameterOfATreeTests
     {

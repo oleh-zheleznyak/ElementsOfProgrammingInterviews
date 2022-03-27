@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Problems
+namespace Problems.Chapter16_Recursion
 {
     public class Edge
     {
