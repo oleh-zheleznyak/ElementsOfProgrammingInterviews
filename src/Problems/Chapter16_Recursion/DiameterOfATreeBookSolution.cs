@@ -1,32 +1,16 @@
 using System;
-using System.Collections.Generic;
 
 namespace Problems.Chapter16_Recursion.BookSolution
 {
-    public class Edge
+    internal readonly record struct HeightAndDiameter(int Height, int Diameter);
+
+    public class Node : Problems.Chapter16_Recursion.Node
     {
-        public Edge(int height, Node root)
+        public Node(params Edge[] children) : base(children)
         {
-            Height = height;
-            Root = root;
         }
 
-        public int Height { get; }
-        public Node Root { get; }
-    }
-
-    public readonly record struct HeightAndDiameter(int Height, int Diameter);
-
-    public class Node
-    {
-        public Node(params Edge[] children)
-        {
-            Children = children;
-        }
-
-        public IReadOnlyList<Edge> Children { get; }
-
-        public int Diameter()
+        public override int Diameter()
         {
             return CalculateDiameterRecursively().Diameter;
         }
@@ -38,9 +22,9 @@ namespace Problems.Chapter16_Recursion.BookSolution
 
             foreach (var child in Children)
             {
-                var heightAndDiameter = child.Root.CalculateDiameterRecursively();
+                var heightAndDiameter = ((Node)child.Root).CalculateDiameterRecursively();
                 maxDiameter = Math.Max(maxDiameter, heightAndDiameter.Diameter);
-                var childHeight = heightAndDiameter.Height + child.Height;
+                var childHeight = heightAndDiameter.Height + child.Length;
 
                 if (childHeight > height.max)
                 {

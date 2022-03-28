@@ -1,21 +1,17 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Problems.Chapter16_Recursion
 {
-    public readonly record struct Diameter(int PathIsolatedInSubTree, int PathViaParent);
+    internal readonly record struct Diameter(int PathIsolatedInSubTree, int PathViaParent);
 
-    public class Node
+    public class MyNode : Node
     {
-        public Node(params Edge[] children)
+        public MyNode(params Edge[] children) : base(children)
         {
-            Children = children;
         }
 
-        public IReadOnlyList<Edge> Children { get; }
-
-        public int Diameter()
+        public override int Diameter()
         {
             var diameter = CalculateDiameterRecursively();
             return Math.Max(diameter.PathIsolatedInSubTree, diameter.PathViaParent);
@@ -26,7 +22,8 @@ namespace Problems.Chapter16_Recursion
             if (Children.Count == 0)
                 return new Diameter(0, 0);
 
-            var diameters = Children.Select(x => x.Root.CalculateDiameterRecursively()).ToArray();
+            // TODO: this cast is not elegant - there is no guarantee all nodes are of the same type
+            var diameters = Children.Select(x => ((MyNode)x.Root).CalculateDiameterRecursively()).ToArray();
             var maxDiameterIsolatedInSubTree = diameters.Max(x => x.PathIsolatedInSubTree);
             var maxDiameterViaParent = FindMaxAndIndex(out var maxIndex, diameters);
             var secondMaxDiameterViaParent = FindMaxAndIndex(out var _, diameters, maxIndex);
