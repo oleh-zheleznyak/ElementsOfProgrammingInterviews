@@ -29,11 +29,11 @@ namespace Problems.Chapter16_Recursion.BookSolution
                 if (childHeight > height.max)
                 {
                     height.secondMax = height.max;
-                    height.max = heightAndDiameter.Height;
+                    height.max = childHeight;
                 }
                 else if (childHeight > height.secondMax)
                 {
-                    height.secondMax = heightAndDiameter.Height;
+                    height.secondMax = childHeight;
                 }
             }
             return new HeightAndDiameter(height.max, Math.Max(height.max + height.secondMax, maxDiameter));
