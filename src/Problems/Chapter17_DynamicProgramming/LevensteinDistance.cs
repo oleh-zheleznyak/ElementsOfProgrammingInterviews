@@ -7,18 +7,16 @@ public class LevensteinDistance
     public int ComputeDistance(string first, string second)
     {
         EnsureArgumentsNotNull(first, second);
-        Console.WriteLine($"{first}-{second}");
 
         if (first == second) return 0;
         if (first.Length == 0) return second.Length;
         if (second.Length == 0) return first.Length;
 
         var (firstSuffix, secondSuffix) = RemoveEqualChars(first, second);
-        if (firstSuffix.Length == 0) return second.Length;
-        if (secondSuffix.Length == 0) return first.Length;
+        if (firstSuffix.Length == 0) return secondSuffix.Length;
+        if (secondSuffix.Length == 0) return firstSuffix.Length;
 
-        var neededChar = secondSuffix[0];
-        var editDistance = 1 + ComputeDistance(neededChar + firstSuffix.Remove(0, 1), secondSuffix);
+        var editDistance = 1 + ComputeDistance(firstSuffix.Remove(0, 1), secondSuffix.Remove(0,1));
         var deleteDistance = 1 + ComputeDistance(firstSuffix.Remove(0, 1), secondSuffix);
         var addDistance = 1 + ComputeDistance(firstSuffix, secondSuffix.Remove(0, 1));
 
@@ -37,8 +35,8 @@ public class LevensteinDistance
         while (index < first.Length && index<second.Length && first[index] == second[index]) index++;
         if (index > 0)
         {
-            first = first.Substring(0, index);
-            second = second.Substring(0, index);
+            first = first.Remove(0, index);
+            second = second.Remove(0, index);
         }
         return (first, second);
     }
