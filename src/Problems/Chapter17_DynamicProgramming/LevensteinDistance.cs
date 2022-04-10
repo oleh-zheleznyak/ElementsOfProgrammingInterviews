@@ -2,7 +2,7 @@ namespace Chapter17_DynamicProgramming;
 using System;
 using System.Linq;
 
-public class LevensteinDistance
+public class LevensteinDistance: ILevensteinDistance
 {
     public int ComputeDistance(string first, string second)
     {
