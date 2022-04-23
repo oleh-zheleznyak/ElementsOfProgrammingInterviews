@@ -21,7 +21,8 @@ public class SearchForSequenceIn2DArray
             for (var col = 0; col < matrix.GetLength(1); col++)
             {
                 var point = new Point(row, col);
-                var containsSequence = ContainsSequenceStartingAt(matrix, point, sequence, 0);
+                var span = new ReadOnlySpan<int>(sequence, 0, sequence.Length);
+                var containsSequence = ContainsSequenceStartingAt(matrix, point, span);
                 if (containsSequence) return true;
             }
         }
@@ -29,18 +30,19 @@ public class SearchForSequenceIn2DArray
     }
 
     // TODO: consider using Span instead of array + index
-    private bool ContainsSequenceStartingAt(int[,] matrix, Point start, int[] sequence, int sequenceIndex)
+    private bool ContainsSequenceStartingAt(int[,] matrix, Point start, ReadOnlySpan<int> sequence)
     {
-        if (sequenceIndex >= sequence.Length) return true; // TODO; check - do we need this?
+        if (sequence.Length == 0) return true; // TODO; check - do we need this?
         if (start.row >= matrix.GetLength(0)) return false;
         if (start.col >= matrix.GetLength(1)) return false;
-        if (matrix[start.row, start.col] != sequence[sequenceIndex]) return false;
-        if (sequenceIndex == sequence.Length - 1) return true;
+        if (matrix[start.row, start.col] != sequence[0]) return false;
+        if (sequence.Length == 1) return true;
 
         // same as 
         var adjacentCellsContainSeq = false;
+        var nextSequence = sequence.Slice(1, sequence.Length - 1);
         foreach (var point in GetAdjacentPointsWithinMatrix(start, matrix))
-            adjacentCellsContainSeq = adjacentCellsContainSeq || ContainsSequenceStartingAt(matrix, point, sequence, sequenceIndex + 1);
+            adjacentCellsContainSeq = adjacentCellsContainSeq || ContainsSequenceStartingAt(matrix, point, nextSequence);
         return adjacentCellsContainSeq;
     }
 
