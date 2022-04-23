@@ -32,7 +32,7 @@ public class SearchForSequenceIn2DArray
     // TODO: consider using Span instead of array + index
     private bool ContainsSequenceStartingAt(int[,] matrix, Point start, ReadOnlySpan<int> sequence)
     {
-        if (sequence.Length == 0) return true; // TODO; check - do we need this?
+        if (sequence.IsEmpty) return true; // TODO; check - do we need this?
         if (start.row >= matrix.GetLength(0)) return false;
         if (start.col >= matrix.GetLength(1)) return false;
         if (matrix[start.row, start.col] != sequence[0]) return false;
@@ -40,7 +40,7 @@ public class SearchForSequenceIn2DArray
 
         // same as 
         var adjacentCellsContainSeq = false;
-        var nextSequence = sequence.Slice(1, sequence.Length - 1);
+        var nextSequence = sequence.Slice(1);
         foreach (var point in GetAdjacentPointsWithinMatrix(start, matrix))
             adjacentCellsContainSeq = adjacentCellsContainSeq || ContainsSequenceStartingAt(matrix, point, nextSequence);
         return adjacentCellsContainSeq;
