@@ -11,7 +11,7 @@ public class Knapsack
         if (clocks.Length ==0) return 0;
         // w >0
         // c.Len >0
-        var cache = new int?[clocks.Length, maxWeight]; // Could be large!!
+        var cache = new int?[clocks.Length, maxWeight+1]; // Could be large!!
         var value = MaxValue(clocks, maxWeight, clocks.Length - 1, 0, cache); // TODO refactor - less args
         return value;
     }
