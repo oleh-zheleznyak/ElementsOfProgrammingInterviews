@@ -11,39 +11,48 @@ namespace Problems.Chapter17_DynamicProgramming
     /// </summary>
     public class MinimumWeightPathInATriangle
     {
-		public int FindMinimumWeightPath(int[][] triangle)
-		{
-			if (triangle is null) throw new ArgumentNullException(nameof(triangle));
-			if (!IsProperTriangle(triangle)) throw new ArgumentException(triangle));
+        public int FindMinimumWeightPath(int[][] triangle)
+        {
+            if (triangle is null) throw new ArgumentNullException(nameof(triangle));
+            if (!IsProperTriangle(triangle)) throw new ArgumentException("not a proper triangle", nameof(triangle));
 
-			var cache = CreateCacheSameSizeAs(triangle); // or rectangular, but more memory
-			var min = int.MaxValue;
-			var level = triangle.Length - 1;
-			for (int i = 0; i < triangle[level].Length; i++)
-			{
-				var weight = FindMinimumWeightPath(triangle, i, level, cache);
-				min = Math.Min(min, weight);
-			}
-			return min;
-		}
+            var cache = CreateCacheSameSizeAs(triangle); // or rectangular, but more memory
+            var min = int.MaxValue;
+            var level = triangle.Length - 1;
+            for (int i = 0; i < triangle[level].Length; i++)
+            {
+                var weight = FindMinimumWeightPath(triangle, i, level, cache);
+                min = Math.Min(min, weight);
+            }
+            return min;
+        }
 
-		private int FindMinimumWeightPath(int[][] triangle, int startingPoint, int level, int?[][] cache)
-		{
-			if (level == 0) return triangle[0][0];
-			if (cache[level][startingPoint].HasValue) return cache[level][startingPoint].Value;
+        private int FindMinimumWeightPath(int[][] triangle, int startingPoint, int level, int?[][] cache)
+        {
+            if (level == 0) return triangle[0][0];
+            if (cache[level][startingPoint].HasValue) return cache[level][startingPoint].Value;
 
-			var sameIndex = startingPoint < triangle[level].Length ? FindMinimumWeightPath(triangle, startingPoint, level - 1, cache) : int.MaxValue;
-			var smallerIndex = startingPoint > 0 ? FindMinimumWeightPath(triangle, startingPoint - 1, level - 1, cache) : int.MaxValue; // not very elegant
+            var sameIndex = startingPoint < triangle[level - 1].Length ? FindMinimumWeightPath(triangle, startingPoint, level - 1, cache) : int.MaxValue;
+            var smallerIndex = startingPoint > 0 ? FindMinimumWeightPath(triangle, startingPoint - 1, level - 1, cache) : int.MaxValue; // not very elegant
 
-			var weight = Math.Min(sameIndex, smallerIndex) + triangle[level, startingPoint];
-			cache[level][startingPoint] = weight;
-			return weight;
-		}
+            var weight = Math.Min(sameIndex, smallerIndex) + triangle[level][startingPoint];
+            cache[level][startingPoint] = weight;
+            return weight;
+        }
 
-		private bool IsProperTriangle(int[][] triangle) => true; //TODO
-		private int?[][] CreateCacheSameSizeAs(int[][] triangle) => // TODO;
+        private bool IsProperTriangle(int[][] triangle)
+        {
+            for (int i = 0; i < triangle.Length; i++)
+                if (triangle[i].Length != i + 1) return false;
+            return true;
+        }
 
-
-
-	}
+        private int?[][] CreateCacheSameSizeAs(int[][] triangle)
+        {
+            var cache = new int?[triangle.Length][];
+            for (int i = 0; i < triangle.Length; i++)
+                cache[i] = new int?[triangle[i].Length];
+            return cache;
+        }
+    }
 }
