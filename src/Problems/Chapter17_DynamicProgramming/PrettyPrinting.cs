@@ -1,10 +1,13 @@
 namespace Problems.Chapter17_DynamicProgramming;
 using System;
+using System.Linq;
 
 public class PrettyPrinting
 {
+    public record struct Line(string[] Words, uint Messiness, uint Level);
+    public record struct Decomposition(Line[] Lines, uint Messiness);
 
-    public uint DecomposeIntoLines(string initialText, uint maxLineWidth)
+    public Decomposition DecomposeIntoLines(string initialText, uint maxLineWidth)
     {
         if (initialText == null) throw new ArgumentNullException(nameof(initialText));
         if (string.IsNullOrWhiteSpace(initialText)) throw new ArgumentException("whitespace"); // todo better message
@@ -12,30 +15,32 @@ public class PrettyPrinting
 
 
         var words = initialText.Split(' ');
-        var cache = new uint?[words.Length, words.Length];
-        var result = DecomposeIntoLines(words, words.Length-1, maxLineWidth, words.Length-1, cache);
+        var cache = new Decomposition?[words.Length, words.Length];
+        var result = DecomposeIntoLines(words, words.Length-1, maxLineWidth, (uint)words.Length-1, cache);
         return result;
     }
 
-    private uint DecomposeIntoLines(string[] words, int offset, uint maxLineWidth, int level, uint?[,] cache)
+    // TODO: refactor
+    private Decomposition DecomposeIntoLines(string[] words, int offset, uint maxLineWidth, uint level, Decomposition?[,] cache)
     {
-        if (offset < 0 || level <0) return 0;
+        if (offset < 0 || level <0) return new Decomposition(Array.Empty<Line>(),0);
         if (cache[level,offset].HasValue) return cache[level,offset].Value;
 
-        var min = uint.MaxValue;
-        var lineWidth =(uint)words[offset].Length;
-        var newLineWidth = 0u;
-        for (var i = 1; i < offset; i++)
+        var min = new Decomposition(Array.Empty<Line>(), uint.MaxValue);
+        var lineWidth =-1; // to account for first word not preceded by space
+        for (var i = 0; i <= offset; i++)
         {
-            newLineWidth = (uint)(lineWidth + 1 + words[offset - i].Length); // space plus word
-            if (newLineWidth >= maxLineWidth) break;
+            var newLineWidth = lineWidth + 1 + words[offset - i].Length; // space plus word
+            if (newLineWidth > maxLineWidth) break;
             lineWidth = newLineWidth;
-            var value = DecomposeIntoLines(words, offset - i, maxLineWidth, level - 1, cache);
-            if (value < min) min = value; // or Math.Min
+            var lineMessiness = (uint)Math.Pow(maxLineWidth - lineWidth,2);
+            var line = new Line(words[(offset-i)..(offset+1)],lineMessiness ,level); // TODO: much copying for prod code
+            var value = DecomposeIntoLines(words, offset - i - 1, maxLineWidth, level - 1, cache);
+            if (value.Messiness + lineMessiness < min.Messiness) {
+                min = new Decomposition(value.Lines.Union(new [] {line}).ToArray(), value.Messiness+lineMessiness); // TODO: this is too much copying for prod code
+            };
         }
-        var messiness = min + (uint)Math.Pow(maxLineWidth - lineWidth,2);
-        cache[level,offset]=messiness;
-
-        return messiness;
+        cache[level,offset]=min;
+        return min;
     }
 }
