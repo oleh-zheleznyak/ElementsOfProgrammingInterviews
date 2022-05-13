@@ -2,7 +2,7 @@ namespace Problems.Chapter17_DynamicProgramming;
 
 using System;
 
-public class LongestNonDecreasingSubSequence
+public class LongestNonDecreasingSubSequence : ILongestNonDecreasingSubSequence
 {
     public int Length(int[] array)
     {
@@ -25,7 +25,7 @@ public class LongestNonDecreasingSubSequence
         var withoutThisValue = Length(array, offset + 1, prevValue, length);
         var withThisValue = prevValue > currValue ?
            Length(array, offset + 1, currValue, 1) : Length(array, offset + 1, currValue, length + 1);
-        
+
         var maxLength = Math.Max(withoutThisValue, withThisValue);
         return maxLength;
     }
