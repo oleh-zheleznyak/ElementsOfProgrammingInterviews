@@ -11,20 +11,22 @@ public class FindTheMajorityElement
         if (array.Length == 1) return array[0];
 
         // option 1 - dictionary, O(n) time, O(n) space
-        // more than half are - majority
         // option 2 - sort, loop, count (more than half) - O(nlgn) time, O(1) space if sort is in-place
-        Array.Sort(array);
+        // option 3 - as given in the book - O(n) time and O(1) space
         var counter = 1;
-        var prev = array[0];
+        var candidate = array[0];
         for (int i = 1; i < array.Length; i++)
         {
             var current = array[i];
-            if (current == prev) counter++;
-            else counter = 0;
-            
-            if (counter * 2 > array.Length) return current;
-            prev = current;
+            if (current == candidate) counter++;
+            else counter--;
+
+            if (counter == 0)
+            {
+                candidate = current;
+                counter = 1;
+            }
         }
-        return null; // perhaps throw - pre-condition is broken
+        return candidate;
     }
 }
