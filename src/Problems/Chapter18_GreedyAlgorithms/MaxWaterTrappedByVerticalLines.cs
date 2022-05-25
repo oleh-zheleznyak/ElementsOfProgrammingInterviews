@@ -13,27 +13,35 @@ namespace Problems.Chapter18_GreedyAlgorithms
             if (array is null) throw new ArgumentNullException(nameof(array));
             if (array.Length<2) throw new ArgumentException("not enough elements", nameof(array));
 
-            // brute force - nested for loops, take every pair, compute volume - O(n^2) time, O(1) space
-            // sort - no O(nlgn)
-            // O(n)
+            return FindMax(array);
+        }
 
+        private (int, int) FindMax(int[] array)
+        {
             var max = int.MinValue;
             var pair = (max, max);
-            for (int i = 0; i < array.Length; i++)
+            int start = 0, end = array.Length-1;
+            while (start<end)
             {
-                for (int j = i+1; j < array.Length; j++)
+                var volume = ComputeVolume(array, end, start);
+                if (volume > max)
                 {
-                    var width = j - i;
-                    var height = Math.Min(array[i], array[j]);
-                    var volume = width * height;
-                    if (volume>max)
-                    {
-                        max = volume;
-                        pair = (i,j);
-                    }
+                    max = volume;
+                    pair = (start, end);
                 }
+
+                if (array[start] > array[end]) end--;
+                else start++;
             }
             return pair;
+        }
+
+        private static int ComputeVolume(int[] array, int end, int start)
+        {
+            var width = end - start;
+            var height = Math.Min(array[start], array[end]);
+            var volume = width * height;
+            return volume;
         }
     }
 }
