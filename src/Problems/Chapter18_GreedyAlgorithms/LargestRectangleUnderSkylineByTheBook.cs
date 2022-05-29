@@ -11,33 +11,37 @@ namespace Problems.Chapter18_GreedyAlgorithms
             if (heights.Length < 2) throw new ArgumentException("not enough elements", nameof(heights));
 
             var pillarInices = new Stack<uint>();
-            var candidateRectangle = new Rectangle(0,0,0);
+            var candidateRectangle = new Rectangle(0, 0, 0);
 
             pillarInices.Push(0);
-            for (uint i = 1; i < heights.Length; i++)
+            for (uint i = 1; i <= heights.Length; i++)
             {
-                Console.WriteLine('a'+i);
-                var current = heights[i];
-                long lastRemoved = -1;
-                while (pillarInices.Count > 0 && 
-                    ((heights[pillarInices.Peek()] >= current) || (i==heights.Length-1))
-                    )
+                if (pillarInices.Count > 0 && i < heights.Length && heights[i] == heights[pillarInices.Peek()])
                 {
-                    var start = pillarInices.Pop();
-                    var height = heights[start];
-                    var index = pillarInices.Count > 0 ? pillarInices.Peek() + 1: 0; // At J we have total shite
-                    lastRemoved = start;
-                    var area = (i - index) * height; // 12  -- G is counted wrong and K  - we do not consider the pillar C
+                    pillarInices.Pop();
+                    pillarInices.Push(i);
+                }
 
+                while (pillarInices.Count > 0 && IsNewPillarOrReachEnd(heights, i, pillarInices.Peek()))
+                {
+                    var height = heights[pillarInices.Peek()];
+                    pillarInices.Pop();
+                    var start = pillarInices.Count > 0 ? pillarInices.Peek() + 1 : 0;
+                    var width = i - start;
+                    var area = height * width;
                     if (area > candidateRectangle.Area)
                         candidateRectangle = new Rectangle(start, i, height);
                 }
-                if (lastRemoved > 0 && heights[lastRemoved] == current)
-                    pillarInices.Push((uint)lastRemoved);
-                else pillarInices.Push(i);
+                pillarInices.Push(i);
             }
-
             return candidateRectangle;
+        }
+
+        private bool IsNewPillarOrReachEnd(uint[] heights, uint currentIndex, uint lastPillarIndex)
+        {
+            return currentIndex < heights.Length ?
+                heights[currentIndex] < heights[lastPillarIndex]
+                : true;
         }
     }
 }
