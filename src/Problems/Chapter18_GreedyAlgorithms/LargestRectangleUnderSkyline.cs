@@ -2,7 +2,10 @@ using System;
 
 namespace Problems.Chapter18_GreedyAlgorithms
 {
-    public record Rectangle(uint Start, uint End, uint Height);
+    public record Rectangle(uint Start, uint End, uint Height)
+    {
+        public uint Area => Height * (End - Start);
+    }
     
     public class LargestRectangleUnderSkyline
     {
