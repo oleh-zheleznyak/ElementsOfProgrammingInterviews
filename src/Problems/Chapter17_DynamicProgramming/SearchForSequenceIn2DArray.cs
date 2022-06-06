@@ -3,12 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-public record struct Point(int row, int col)
-{
-    public bool BelongsToMatrix(int[,] matrix) =>
-       row >= 0 && row < matrix.GetLength(0) && col >= 0 && col < matrix.GetLength(1);
-}
-
 public record struct PointWithLength(Point point, int length);
 
 public class SearchForSequenceIn2DArray
