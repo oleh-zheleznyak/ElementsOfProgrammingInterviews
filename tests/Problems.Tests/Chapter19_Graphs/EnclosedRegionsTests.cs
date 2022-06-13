@@ -19,6 +19,7 @@ public class EnclosedRegionsTests
     {
         yield return AllAreEnclosedIn2X2Matrix();
         yield return SingleWhiteInside3X3();
+        yield return ExampleFromBook();
     }
 
     private static object[] AllAreEnclosedIn2X2Matrix() => new object[]
@@ -31,6 +32,24 @@ public class EnclosedRegionsTests
     {
         new bool[,] { {false,false,false}, {false,true,false},{false,false,false} },
         new bool[,] { {false,false,false}, {false,false,false},{false,false,false} },
+    };
+    
+    private static object[] ExampleFromBook() => new object[]
+    {
+        new bool[,]
+        {
+            {false,false,false,false}, 
+            {true,false,true,false},
+            {false, true,true,false},
+            {false,false,false,false},
+        },
+        new bool[,]
+        {
+            {false,false,false,false}, 
+            {true,false,false,false},
+            {false,false,false,false},
+            {false,false,false,false},
+        },
     };
 
 }
